@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import Sidebar from '../../components/main/Sidebar'
 import Navbar from '../../components/main/Navbar'
-import { getUserList } from '../../api/user/userApi'
+import useUser from '../../hooks/useUser'
+import { useSelector } from 'react-redux'
 
 const ChatPage = () => {
   const [sidebar, setSidebar] = useState(false);
-  const [userlist,setUserList] = useState([]);
+  const { users, loading, error } = useSelector((state) => state.user);
+  const { getUsers } = useUser();
+  useEffect(() => {
+    getUsers();
 
-  useEffect( ()=>{
-      const fetchData = async ()=>{
-        const response = getUserList();
-        console.log(response.data);
-        setUserList((await response).data);
-      }
-      fetchData();
-    
-  },[])
-  console.log(userlist);
+  }, [])
+
+  if (loading) {
+    return (<div>Loading....</div>)
+  }
+  if (error) {
+    console.log(error)
+    return (<div>{error}</div>)
+  }
   return (
     <div className='bg-gray-900 flex'>
       {
-        sidebar ? <Sidebar userlist={userlist} setSidebar={setSidebar} /> : null
+        sidebar ? <Sidebar setSidebar={setSidebar} /> : null
       }
-      <Navbar setSidebar={setSidebar}/>
+      <Navbar setSidebar={setSidebar} />
 
     </div>
   )

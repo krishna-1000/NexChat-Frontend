@@ -1,6 +1,3 @@
 import axiosInstance from "../axiosInstance"
 
-export const getUserList = ()=>{
-    return axiosInstance.get("/api/users");
-
-}
+export const fetchUsersApi = () => axiosInstance.get("/api/users").then(r => r.data).catch(e =>console.log(e));

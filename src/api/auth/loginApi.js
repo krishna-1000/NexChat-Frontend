@@ -1,8 +1,5 @@
 import React from 'react'
 import axiosInstance from '../axiosInstance'
 
-const loginApi = (data) => {
-    return axiosInstance.post("/api/auth/login",data);
-}
+export const loginApi = (data) => axiosInstance.post("/api/auth/login", data);
 
-export default loginApi
