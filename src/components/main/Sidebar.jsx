@@ -8,11 +8,13 @@ import { useSelector } from 'react-redux';
 
 
 
-const Sidebar = ({ setSidebar }) => {
+const Sidebar = ({ setMember }) => {
     const [inputData, setInputData] = useState("");
     const [channels, setChannels] = useState([]);
     const { users } = useSelector((state) => state.user);
     console.log(users)
+
+
     return (
         //outerMost 
         <div className='bg-gray-900 w-xs text-white min-h-screen flex-col justify-center items-center rounded-2xl'>
@@ -20,9 +22,7 @@ const Sidebar = ({ setSidebar }) => {
                 <div className='flex'>
                     <FaRegMessage /> <span>NexChat</span>
                 </div>
-                <div onClick={() => setSidebar(false)}>
-                    <IoMdClose></IoMdClose>
-                </div>
+               
 
             </header>
             {/* seach bar */}
@@ -39,7 +39,7 @@ const Sidebar = ({ setSidebar }) => {
                     <div className='flex-col overflow-y-scroll h-40 bg-yellow-500'>
                         {
                             channels.map((channel, index) => (
-                                <UserBox id={channel.id} />
+                                <UserBox  id={channel.id} />
                             ))
                         }
 
@@ -51,12 +51,12 @@ const Sidebar = ({ setSidebar }) => {
                     <div className='bg-cyan-500 flex justify-start items-center'> #channel</div>
                     <div className='flex-col overflow-y-scroll h-73 bg-blue-500'>
                         {
-                            users.map((user, index) => (
+                            users && users.map((user, index) => (
                                 <div key={user.id}>
-                                    <UserBox  username={user.username} />
+                                    <UserBox setMember={setMember} username={user.username} />
                                 </div>))
                         }
-
+                        <UserBox username={"xyz"} />
                     </div>
                 </div>
 
