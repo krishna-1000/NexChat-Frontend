@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
-const ChatNavbar = ({member}) => {
-    let user = useSelector(state => state.user.users.find((u)=> u.username == member));
- 
+const ChatNavbar = () => {
+    const selectedUserId = useSelector((state)=>state.chat.selectedUserId);
+    let user = useSelector(state => state.user.users.find((u)=> u.id == selectedUserId));
     return (
     
         <div className='flex w-full justify-between h-15 bg-red-900 text-white'>

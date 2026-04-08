@@ -1,5 +1,5 @@
 import { fetchUsersApi } from '../../api/user/userApi';
-import {setLoading,setUser,setError} from '../../features/user/userSlice'
+import { setLoading, setUser, setError } from '../../features/user/userSlice'
 const fetchUserService = async (dispatch) => {
 
     try {

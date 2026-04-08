@@ -11,7 +11,7 @@ const LoginPage = () => {
             if(res.status == 200){
                 localStorage.setItem("token",res.data);
                 console.log(localStorage.getItem("token"));
-                navigate("/")
+                navigate("/chat")
             }
             return res;
         } catch (error) {

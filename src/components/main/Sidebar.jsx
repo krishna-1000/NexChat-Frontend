@@ -8,11 +8,10 @@ import { useSelector } from 'react-redux';
 
 
 
-const Sidebar = ({ setMember }) => {
+const Sidebar = () => {
     const [inputData, setInputData] = useState("");
     const [channels, setChannels] = useState([]);
     const { users } = useSelector((state) => state.user);
-    console.log(users)
 
 
     return (
@@ -53,7 +52,7 @@ const Sidebar = ({ setMember }) => {
                         {
                             users && users.map((user, index) => (
                                 <div key={user.id}>
-                                    <UserBox setMember={setMember} username={user.username} />
+                                    <UserBox id={user.id} username={user.username} />
                                 </div>))
                         }
                         <UserBox username={"xyz"} />

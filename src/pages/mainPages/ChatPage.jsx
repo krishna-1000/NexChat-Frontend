@@ -8,12 +8,13 @@ import ChatNavbar from '../../components/main/ChatNavbar'
 
 const ChatPage = () => {
   const { users, loading, error } = useSelector((state) => state.user);
-  const [member, setMember] = useState("");
+  const selectedUser = useSelector((state)=>state.chat.selectedUser);
   const { getUsers } = useUser();
   useEffect(() => {
     getUsers();
 
   }, [])
+  
 
   if (loading) {
     return (<div>Loading....</div>)
@@ -26,11 +27,11 @@ const ChatPage = () => {
   return (
     <div className='bg-gray-900 flex'>
 
-      <Sidebar setMember={setMember} />
+      <Sidebar />
 
-      {member ?
+      {selectedUser ?
         <div className='bg-blue-900 text-white flex-col w-full h-screen'>
-          <ChatNavbar member={member} />
+          <ChatNavbar />
           <ChatWindow />
         </div>:<div className='text-white flex justify-center items-center  w-full'>NOTHING TO SHOW</div>
       }
