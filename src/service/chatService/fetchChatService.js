@@ -9,7 +9,7 @@ const fetchChatService = async (dispatch, recieverId) => {
         const chat = await fetchChatroom(recieverId);
         if (chat.data) {
             dispatch(setChatRoomId(chat.data.id));
-            dispatch(setChatMessages(chat.data.messages))
+            dispatch(setChatMessages({ roomId: chat.data.id, messages: chat.data.messages }));
         }
         console.log(chat.data)
     } catch (error) {

@@ -4,14 +4,16 @@ import Navbar from '../../components/main/Navbar'
 import useUser from '../../hooks/useUser'
 import ChatWindow from '../../components/main/ChatWindow'
 import { useSelector } from 'react-redux'
-import ChatNavbar from '../../components/main/ChatNavbar'
+import { connectToStomp } from '../../websocket/websocket'
 
 const ChatPage = () => {
   const { users, loading, error } = useSelector((state) => state.user);
-  const selectedUser = useSelector((state)=>state.chat.selectedUser);
+  const selectedUser = useSelector((state)=>state.chat.selectedUserId);
   const { getUsers } = useUser();
   useEffect(() => {
     getUsers();
+    // connectToStomp();
+
 
   }, [])
   
@@ -29,9 +31,9 @@ const ChatPage = () => {
 
       <Sidebar />
 
-      {selectedUser ?
+      {!selectedUser ?
         <div className='bg-blue-900 text-white flex-col w-full h-screen'>
-          <ChatNavbar />
+          <Navbar />
           <ChatWindow />
         </div>:<div className='text-white flex justify-center items-center  w-full'>NOTHING TO SHOW</div>
       }

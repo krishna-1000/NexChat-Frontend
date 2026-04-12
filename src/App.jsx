@@ -8,6 +8,8 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import LoginPage from './pages/authPage/LoginPage'
 import HomePage from './pages/HomePage'
 import ChatPage from './pages/mainPages/ChatPage'
+import Test from './components/main/Test'
+import Temp from './components/main/Temp'
 
 function App() {
 
@@ -18,6 +20,7 @@ function App() {
         <Route path='/login' element={<LoginPage />}></Route>
         <Route path='/signup' element={<SingUpPage />}></Route>
         <Route path='/chat' element={<ChatPage />}></Route>
+        <Route path='/temp' element={<Test/>}></Route>
       </Routes>
 
     </Router>

@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
-import React from 'react'
+import React, { act } from 'react'
 import { setError, setLoading } from '../user/userSlice'
 
 const initialState = {
     selectedUserId: "",
-    chatLoading:false,
-    chatMessages: [],
-    chatRoomId:"",
-    chatError:null
+    chatLoading: false,
+    chatMessages: {},
+    chatRoomId: "",
+    chatError: null
 
 }
 const chatSlice = createSlice({
@@ -18,7 +18,16 @@ const chatSlice = createSlice({
             state.selectedUserId = action.payload
         },
         setChatMessages: (state, action) => {
-            state.chatMessages = action.payload
+            const { roomId, messages } = action.payload;
+            state.chatMessages[roomId] = messages;
+        },
+        appendMessage: (state, action) => {
+            const { roomId, message } = action.payload;
+
+            if (!state.chatMessages[roomId]) {
+                state.chatMessages[roomId] = [];
+            }
+            state.chatMessages[roomId].push(message);
         },
         setChatRoomId: (state, action) => {
             state.chatRoomId = action.payload
@@ -32,6 +41,6 @@ const chatSlice = createSlice({
     }
 })
 
-export const {setChatLoading,setChatError, setSelectedUserId, setChatMessages,setChatRoomId } = chatSlice.actions
+export const { setChatLoading, appendMessage, setChatError, setSelectedUserId, setChatMessages, setChatRoomId } = chatSlice.actions
 export default chatSlice.reducer;
 

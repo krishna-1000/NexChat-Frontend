@@ -1,31 +1,55 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Message from './SendMessage'
 import SendMessage from './SendMessage';
 import RecieveMessage from './RecieveMessage';
+import { useDispatch, useSelector } from 'react-redux';
+import { connectToStomp, sendMessage, subscribeToRoom, unsubscribeFromRoom } from '../../websocket/websocket';
+import { appendMessage, setChatMessages } from '../../features/chat/chatSlice';
 
 const ChatWindow = () => {
-  const [isSend, setIsSend] = useState(false);
   const [inputData, setInputData] = useState("");
-  const [messages, setMessages] = useState([{}]);
+  const receiverId = useSelector((state) => state.chat.selectedUserId);
+  const allMessages = useSelector((state) => state.chat.chatMessages);
+  const roomId = useSelector((state) => state.chat.chatRoomId);
+  const currentRoomMessages = allMessages[roomId] || [];
+  const dispatch = useDispatch();
+
+
+  // useEffect(() => {
+  //   connectToStomp(() => {
+  //     if (roomId) {
+  //       subscribeToRoom(roomId, (recievedMsg) => {
+  //         dispatch(appendMessage({ roomId: roomId, message: recievedMsg }));
+  //       });
+  //     }
+  //   })
+
+  //   return () => {
+  //     if (roomId) unsubscribeFromRoom(roomId);
+  //   };
+  // }, [roomId, dispatch])
 
   const handleOnClickSend = () => {
     if (inputData.length == "") {
       return;
     }
-    setIsSend(true);
-    setMessages((prev) => [...prev, { message: inputData, isSend: true }]);
+    const messageObj = { content: inputData, chatRoomId: roomId };
+    sendMessage(messageObj);
 
   }
 
-
+  if (currentRoomMessages === undefined || !currentRoomMessages || currentRoomMessages == []) {
+    return (<>Nothing to show</>)
+  }
 
   return (
     <div className=' w-full bg-amber-300 h-screen text-white text-lg flex-col'>
       <div className='bg-white h-130 flex-col overflow-scroll' >
 
         {
-          messages.map((item, index) =>
-            <li className={item.isSend ? 'flex justify-end mb-3' : 'mb-3'} key={index}>{item.isSend ? <SendMessage message={item.message} /> : <RecieveMessage message={item.message} />}</li>
+          currentRoomMessages.map((item, index) =>
+            item ?
+              <li className={item.senderId != receiverId ? 'flex justify-end mb-3' : 'mb-3'} key={index}>{item.senderId != receiverId ? <SendMessage message={item.content} /> : <RecieveMessage message={item.content} />}</li> : null
           )
 
         }

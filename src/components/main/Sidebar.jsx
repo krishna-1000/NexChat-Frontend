@@ -4,6 +4,8 @@ import { IoMdClose } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
 import UserBox from './UserBox';
 import { useSelector } from 'react-redux';
+import { connectToStomp } from '../../websocket/websocket';
+import CreateGroup from '../group/CreateGroup';
 
 
 
@@ -11,22 +13,24 @@ import { useSelector } from 'react-redux';
 const Sidebar = () => {
     const [inputData, setInputData] = useState("");
     const [channels, setChannels] = useState([]);
+    const [searchName, setSearchName] = useState("");
     const { users } = useSelector((state) => state.user);
+
 
 
     return (
         //outerMost 
         <div className='bg-gray-900 w-xs text-white min-h-screen flex-col justify-center items-center rounded-2xl'>
             <header className='border-red-300 w-full h-13 bg-pink-500 flex justify-between items-center'>
-                <div className='flex'>
+                <div onClick={() => connectToStomp()} className='flex'>
                     <FaRegMessage /> <span>NexChat</span>
                 </div>
-               
+
 
             </header>
             {/* seach bar */}
             <div className='bg-red-500 flex justify-center items-center pl-4 relative rounded-2xl h-8'>
-                <input type='text' name='searchbar' value={inputData} onChange={(e) => setInputData(e.target.value)} className='text-black bg-white w-full h-fit'></input>
+                <input type='text' name='searchbar' value={searchName} onChange={(e) => setSearchName(e.target.value)} className='text-black bg-white w-full h-fit'></input>
                 <div className='w-20 bg-black rounded-2xl'>
                     <CiSearch className='size-5' />
                 </div>
@@ -34,11 +38,14 @@ const Sidebar = () => {
             <main className='bg-green-500  h-125'>
                 {/* chanel */}
                 <div className='ml-3'>
-                    <div className='bg-cyan-500 flex justify-start items-center'> #channel</div>
+                    <div className='bg-cyan-500 flex justify-evenly items-center'>
+                        <span>Groups</span>
+                        <button onClick={() => CreateGroup()} className='bg-black text-lg text-white'>+</button>
+                    </div>
                     <div className='flex-col overflow-y-scroll h-40 bg-yellow-500'>
                         {
                             channels.map((channel, index) => (
-                                <UserBox  id={channel.id} />
+                                <UserBox id={channel.id} />
                             ))
                         }
 
@@ -50,11 +57,15 @@ const Sidebar = () => {
                     <div className='bg-cyan-500 flex justify-start items-center'> #channel</div>
                     <div className='flex-col overflow-y-scroll h-73 bg-blue-500'>
                         {
-                            users && users.map((user, index) => (
+                            users && users.filter((user, index) => {
+                                return user.username.includes(searchName.toLowerCase())
+                            }).map((user) => (
                                 <div key={user.id}>
                                     <UserBox id={user.id} username={user.username} />
-                                </div>))
+                                </div>
+                            ))
                         }
+                        
                         <UserBox username={"xyz"} />
                     </div>
                 </div>
