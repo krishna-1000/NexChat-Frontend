@@ -1,12 +1,21 @@
 import React from 'react'
 import { FaBars } from "react-icons/fa";
-import { useSelector } from 'react-redux';
-import { webRTC } from '../../service/VoiceChatService/webRTC';
+import { useDispatch } from 'react-redux';
+import {  setIsModalOpen, setType } from '../../features/modal/modalSlice'
 
-const handleJoineCall = ()=>{
-    webRTC();
-}
 const Navbar = () => {
+    const dispatch = useDispatch();
+
+    const handleJoineCall = async () => {
+        
+        dispatch(setType("video-call"))
+        dispatch(setIsModalOpen(true))
+
+    }
+    const handleVoiceCall = () => {
+        dispatch(setType("voice-call"))
+        dispatch(setIsModalOpen(true))
+    }
     // const selectedUserId = useSelector((state) => state.chat.selectedUserId);
     // let user = useSelector(state => state.user.users.find((u) => u.id == selectedUserId));
     return (
@@ -19,8 +28,8 @@ const Navbar = () => {
                 </div>
             </div>
             <div className='flex gap-3'>
-                <div className='cursor-pointer' onClick={()=>handleJoineCall()}>vo</div>
-                <div>vi</div>
+                <div className='cursor-pointer' onClick={() => handleJoineCall()}>vo</div>
+                <div onClick={() => handleVoiceCall()}>vi</div>
                 <div>dot</div>
 
             </div>

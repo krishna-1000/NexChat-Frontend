@@ -15,19 +15,19 @@ const ChatWindow = () => {
   const dispatch = useDispatch();
 
 
-  // useEffect(() => {
-  //   connectToStomp(() => {
-  //     if (roomId) {
-  //       subscribeToRoom(roomId, (recievedMsg) => {
-  //         dispatch(appendMessage({ roomId: roomId, message: recievedMsg }));
-  //       });
-  //     }
-  //   })
+  useEffect(() => {
+    connectToStomp(() => {
+      if (roomId) {
+        subscribeToRoom(roomId, (recievedMsg) => {
+          dispatch(appendMessage({ roomId: roomId, message: recievedMsg }));
+        });
+      }
+    })
 
-  //   return () => {
-  //     if (roomId) unsubscribeFromRoom(roomId);
-  //   };
-  // }, [roomId, dispatch])
+    return () => {
+      if (roomId) unsubscribeFromRoom(roomId);
+    };
+  }, [roomId, dispatch])
 
   const handleOnClickSend = () => {
     if (inputData.length == "") {

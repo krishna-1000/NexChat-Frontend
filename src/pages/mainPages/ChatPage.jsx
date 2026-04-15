@@ -27,11 +27,12 @@ const ChatPage = () => {
   // }
   
   return (
+    
     <div className='bg-gray-900 flex'>
 
       <Sidebar />
 
-      {!selectedUser ?
+      {selectedUser ?
         <div className='bg-blue-900 text-white flex-col w-full h-screen'>
           <Navbar />
           <ChatWindow />

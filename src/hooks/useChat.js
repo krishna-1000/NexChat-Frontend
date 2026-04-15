@@ -3,11 +3,11 @@ import fetchChatService from "../service/chatService/fetchChatService";
 
 const useChat = () => {
     const dispatch = useDispatch();
-    
+
     try {
-        
+
         const getChatroom = (id) => {
-            fetchChatService(dispatch,id);
+            fetchChatService(dispatch, id);
         }
         return { getChatroom }
     } catch (error) {

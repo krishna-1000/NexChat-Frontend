@@ -1,16 +1,20 @@
 import React from 'react'
 import LoginForm from '../../components/auth/LoginForm';
 import { useNavigate } from 'react-router-dom';
-import {loginApi} from '../../api/auth/loginApi';
+import { loginApi } from '../../api/auth/loginApi';
+import { useDispatch } from 'react-redux';
 
 const LoginPage = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const handleLogin = async (data) => {
         try {
             const res = await loginApi(data);
-            if(res.status == 200){
-                localStorage.setItem("token",res.data);
+            if (res.status == 200) {
+                localStorage.setItem("token", res.data.token);
+                localStorage.setItem("loginUser", res.data.username);
                 console.log(localStorage.getItem("token"));
+                
                 navigate("/chat")
             }
             return res;
@@ -21,7 +25,7 @@ const LoginPage = () => {
     }
     return (
         <div>
-            <LoginForm onSubmit={handleLogin}/>
+            <LoginForm onSubmit={handleLogin} />
         </div>
     )
 }

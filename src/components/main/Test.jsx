@@ -22,7 +22,8 @@ const Test = () => {
             console.log("BEFORE",isCurrent)
             if (isCurrent) {
                 subscription = subscribeToSignal((receivedSignal) => {
-                    console.log(receivedSignal);
+                    console.log("RECIEVED -> ",receivedSignal);
+                    console.log("_____---------_________")
                     handleReceiveSignal(receivedSignal);
                 })
             } else {
@@ -49,7 +50,8 @@ const Test = () => {
                 sendSignal({
                     type: "ice",
                     data: event.candidate,
-                    targetUser: "raj"
+                    targetUser: "raj",
+                    sender:"krishna"
                 })
             }
         }
@@ -61,6 +63,8 @@ const Test = () => {
             console.error("ON TRACK FIRED...............")
             if (remoteVideoRef.current) {
                 remoteVideoRef.current.srcObject = event.streams[0];
+                console.error("REMOTE SETED")
+                console.error(event.streams[0].getTracks())
                 setTimeout(() => {
                     remoteVideoRef.current.play().catch(err => {
                         if (err.name !== 'AbortError') {
@@ -147,7 +151,8 @@ const Test = () => {
                 sendSignal({
                     type: "answer",
                     data: answer,
-                    targetUser: signal.sender
+                    targetUser:"krishna",
+                    sender:"raj"
                 })
                 console.log("ANSER SENDED")
             }

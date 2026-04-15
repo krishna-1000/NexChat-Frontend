@@ -4,6 +4,7 @@ import { setError, setLoading } from '../user/userSlice'
 
 const initialState = {
     selectedUserId: "",
+    selectedUserName: "",
     chatLoading: false,
     chatMessages: {},
     chatRoomId: "",
@@ -16,6 +17,9 @@ const chatSlice = createSlice({
     reducers: {
         setSelectedUserId: (state, action) => {
             state.selectedUserId = action.payload
+        },
+        setSelectedUserName: (state, action) => {
+            state.selectedUserName = action.payload
         },
         setChatMessages: (state, action) => {
             const { roomId, messages } = action.payload;
@@ -41,6 +45,6 @@ const chatSlice = createSlice({
     }
 })
 
-export const { setChatLoading, appendMessage, setChatError, setSelectedUserId, setChatMessages, setChatRoomId } = chatSlice.actions
+export const { setSelectedUserName, setChatLoading, appendMessage, setChatError, setSelectedUserId, setChatMessages, setChatRoomId } = chatSlice.actions
 export default chatSlice.reducer;
 

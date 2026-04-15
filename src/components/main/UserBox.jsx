@@ -1,7 +1,7 @@
 import React from 'react'
 import { CiAlarmOn } from 'react-icons/ci'
 import { useDispatch } from 'react-redux'
-import { setSelectedUserId } from '../../features/chat/chatSlice'
+import { setSelectedUserId,setSelectedUserName } from '../../features/chat/chatSlice'
 import useChat from '../../hooks/useChat'
 
 const UserBox = ({ id, username }) => {
@@ -10,6 +10,7 @@ const UserBox = ({ id, username }) => {
 
     const handelSelectUser = ()=>{
         dispatch(setSelectedUserId(id));
+        dispatch(setSelectedUserName(username))
         getChatroom(id);
 
     }

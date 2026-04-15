@@ -76,7 +76,7 @@ export const sendMessage = (message) => {
 
 export const sendSignal = (payload) => {
     if (stompClient && stompClient.connected) {
-        payload.sender = "krishna"
+
         console.log(payload)
         stompClient.publish({
             destination: "/app/webrtc-signal",
@@ -86,10 +86,13 @@ export const sendSignal = (payload) => {
 }
 
 export const subscribeToSignal = (onSignalRecieved) => {
-    console.log("aya")
+    console.log("signal aya.............. ")
+   
+    if (stompClient && stompClient.connected) {
 
-    return stompClient.subscribe("/user/queue/webrtc", (msg) => {
-        const signal = JSON.parse(msg.body);
-        onSignalRecieved(signal);
-    })
+        return stompClient.subscribe("/user/queue/webrtc", (msg) => {
+            const signal = JSON.parse(msg.body);
+            onSignalRecieved(signal);
+        })
+    }
 }

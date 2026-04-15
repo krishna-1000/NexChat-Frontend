@@ -1,19 +1,19 @@
-const users = [{
-    id:"2",
-    content:"krishna hi",
-    senderId:"4"
-},{
-    id:"3",
-    content:"bolo hi",
-    senderId:"4"
-},{
-    id:"4",
-    content:"jay shree krishna ",
-    senderId:"4"
-},]
+// const users = [{
+//     id:"2",
+//     content:"krishna hi",
+//     senderId:"4"
+// },{
+//     id:"3",
+//     content:"bolo hi",
+//     senderId:"4"
+// },{
+//     id:"4",
+//     content:"jay shree krishna ",
+//     senderId:"4"
+// },]
 
-users.filter((item)=>{
-    return item.content.includes("k")
-}).map((item,index)=>{
-    console.log(item.content)
-})
+// users.filter((item)=>{
+//     return item.content.includes("k")
+// }).map((item,index)=>{
+//     console.log(item.content)
+// })
