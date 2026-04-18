@@ -13,6 +13,7 @@ const ChatWindow = () => {
   const roomId = useSelector((state) => state.chat.chatRoomId);
   const currentRoomMessages = allMessages[roomId] || [];
   const dispatch = useDispatch();
+  const currentUserId = localStorage.getItem("loginUserId");
 
 
   useEffect(() => {
@@ -49,7 +50,13 @@ const ChatWindow = () => {
         {
           currentRoomMessages.map((item, index) =>
             item ?
-              <li className={item.senderId != receiverId ? 'flex justify-end mb-3' : 'mb-3'} key={index}>{item.senderId != receiverId ? <SendMessage message={item.content} /> : <RecieveMessage message={item.content} />}</li> : null
+              <li className={item.senderId == currentUserId ? 'flex justify-end mb-3' : 'mb-3'} key={index}>
+                {
+                  item.senderId == currentUserId ?
+                    <SendMessage username={item.senderName} message={item.content} />
+                    : <RecieveMessage username={item.senderName} message={item.content} />
+                }
+              </li> : null
           )
 
         }

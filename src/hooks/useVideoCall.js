@@ -21,7 +21,7 @@ const useVideoCall = () => {
             localStream?.getTracks().forEach(track => { track.stop() })
             setLocalStream(null);
             setRemoteStream(null);
-           dispatch(setIsModalOpen(false));
+            dispatch(setIsModalOpen(false));
 
         })
 
@@ -47,7 +47,7 @@ const useVideoCall = () => {
 
     const ReceiveVideoCall = async (signal) => {
         try {
-            console.log("receiving ......")
+            console.log("receiving ...... in useVideoCall")
 
             const localStream = await ReceiveCall(signal)
 
@@ -59,15 +59,16 @@ const useVideoCall = () => {
             console.log(error.message)
         }
     }
-    const HangUpCall = (senderName, targetUser) => {
-        remoteStream?.getTracks().forEach(track => {
-            track.stop()
-        });
-        localStream?.getTracks().forEach(track => { track.stop() })
+    const HangUpCall =  (senderName, targetUser) => {
+        console.log("STREAM IN HANG UP CALL")
+        console.log(localStream)
+        console.log(remoteStream)
+        EndCall(senderName, targetUser);
+       
         setLocalStream(null)
         setRemoteStream(null)
         dispatch(setIsModalOpen(false))
-        EndCall(senderName, targetUser);
+
     }
 
 

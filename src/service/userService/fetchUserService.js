@@ -1,4 +1,6 @@
+import { fetchGroupsApi } from '../../api/user/fetchGroupsApi';
 import { fetchUsersApi } from '../../api/user/userApi';
+import { setGroup } from '../../features/chat/groupSlice';
 import { setLoading, setUser, setError } from '../../features/user/userSlice'
 const fetchUserService = async (dispatch) => {
 
@@ -16,3 +18,16 @@ const fetchUserService = async (dispatch) => {
 }
 
 export default fetchUserService;
+
+export const fetchGroupService = async (dispatch,id) => {
+
+    try {
+        const response = await fetchGroupsApi(id);
+        console.log(await response);
+        dispatch(setGroup(await response));
+
+    } catch (error) {
+        console.error(error)
+    }
+
+}

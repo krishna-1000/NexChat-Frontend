@@ -5,18 +5,23 @@ import useUser from '../../hooks/useUser'
 import ChatWindow from '../../components/main/ChatWindow'
 import { useSelector } from 'react-redux'
 import { connectToStomp } from '../../websocket/websocket'
+import SocketEventListener from '../../components/main/websocket/SocketEventListener'
+import GroupNavbar from '../../components/main/GroupNavbar'
 
 const ChatPage = () => {
   const { users, loading, error } = useSelector((state) => state.user);
-  const selectedUser = useSelector((state)=>state.chat.selectedUserId);
-  const { getUsers } = useUser();
+  const selectedUser = useSelector((state) => state.chat.selectedUserId);
+  const selectedGroup = useSelector((state) => state.group.selectedGroup);
+  const { getUsers, getGroups } = useUser();
+  const loginUserId = localStorage.getItem("loginUserId");
   useEffect(() => {
     getUsers();
+    getGroups(loginUserId);
     // connectToStomp();
 
 
   }, [])
-  
+
 
   if (loading) {
     return (<div>Loading....</div>)
@@ -25,19 +30,21 @@ const ChatPage = () => {
   //   console.log(error)
   //   return (<div>{error}</div>)
   // }
-  
+
   return (
-    
+
     <div className='bg-gray-900 flex'>
+      <SocketEventListener />
 
       <Sidebar />
 
-      {selectedUser ?
+      {selectedUser || selectedGroup ?
         <div className='bg-blue-900 text-white flex-col w-full h-screen'>
-          <Navbar />
+          {selectedGroup ? <GroupNavbar /> : <Navbar />}
           <ChatWindow />
-        </div>:<div className='text-white flex justify-center items-center  w-full'>NOTHING TO SHOW</div>
+        </div> : <div className='text-white flex justify-center items-center  w-full'>NOTHING TO SHOW</div>
       }
+
     </div>
   )
 }

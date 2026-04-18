@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setIsModalOpen } from '../features/modal/modalSlice';
 import VoiceCallModal from './CallModal/VoiceCallModal';
 import VideoCallContainer from '../containers/VideoCallContainer';
+import CreateGroupModal from './CreateGroupModal';
 const Modal = () => {
     const { isModalOpen,type, data } = useSelector((state) => state.modal);
     const dispatch = useDispatch();
@@ -16,6 +17,8 @@ const Modal = () => {
                 return <VideoCallContainer />
             case "incoming-call":
                 return <VideoCallContainer />
+            case "create-group":
+                return <CreateGroupModal />
             default:
                 return null;
         }

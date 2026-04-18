@@ -1,19 +1,20 @@
 import React from 'react'
-import { CiAlarmOn } from 'react-icons/ci'
-import { useDispatch } from 'react-redux'
-import { setSelectedUserId,setSelectedUserName } from '../../features/chat/chatSlice'
-import useChat from '../../hooks/useChat'
-import { setSelectedGroup } from '../../features/chat/groupSlice'
+import useChat from '../../hooks/useChat';
+import { useDispatch } from 'react-redux';
+import { CiAlarmOn } from 'react-icons/ci';
+import { setSelectedUserId, setSelectedUserName } from '../../features/chat/chatSlice';
+import { setGroupAdmin, setGroupName, setSelectedGroup } from '../../features/chat/groupSlice';
 
-const UserBox = ({ id, username }) => {
-    const dispatch = useDispatch();  
-    const {getChatroom} = useChat();
+const GroupBox = ({ id, username }) => {
+    const dispatch = useDispatch();
+    const { getChatroomGroup } = useChat();
 
-    const handelSelectUser = ()=>{
-        dispatch(setSelectedGroup(""))
-        dispatch(setSelectedUserId(id));
-        dispatch(setSelectedUserName(username))
-        getChatroom(id);
+    const handelSelectGroup = () => {
+        dispatch(setSelectedUserId(""))
+        dispatch(setSelectedGroup(id));
+        dispatch(setGroupName(username))
+
+        getChatroomGroup(id);
 
     }
     return (
@@ -22,9 +23,9 @@ const UserBox = ({ id, username }) => {
             <div className='flex justify-center items-center bg-yellow-400 h-full w-10 rounded-2xl border-black'>
                 <CiAlarmOn className='text-white ' size={30} />
             </div>
-            <div onClick={()=>handelSelectUser()} className='bg-pink-500  w-full cursor-pointer'>
+            <div onClick={() => handelSelectGroup()} className='bg-pink-500  w-full cursor-pointer'>
                 <div className='bg-black flex justify-between'>
-                    <div  className='font-bold'>{username}</div>
+                    <div className='font-bold'>{username}</div>
                     <div className='text-xs'>1 hour</div>
                 </div>
                 <div className='bg-white text-black flex justify-evenly'>
@@ -36,4 +37,4 @@ const UserBox = ({ id, username }) => {
     )
 }
 
-export default UserBox
+export default GroupBox

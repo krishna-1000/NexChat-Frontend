@@ -3,18 +3,23 @@ import { FaRegMessage } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
 import UserBox from './UserBox';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { connectToStomp } from '../../websocket/websocket';
 import CreateGroup from '../group/CreateGroup';
+import { setData, setIsModalOpen, setType } from '../../features/modal/modalSlice';
+import GroupBox from './GroupBox';
 
 
 
 
 const Sidebar = () => {
     const [inputData, setInputData] = useState("");
-    const [channels, setChannels] = useState([]);
+    const { groups } = useSelector((state) => state.group);
     const [searchName, setSearchName] = useState("");
     const { users } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
+    const currentLoginUserId = localStorage.getItem("loginUserId");
+
 
 
 
@@ -40,12 +45,19 @@ const Sidebar = () => {
                 <div className='ml-3'>
                     <div className='bg-cyan-500 flex justify-evenly items-center'>
                         <span>Groups</span>
-                        <button onClick={() => CreateGroup()} className='bg-black text-lg text-white'>+</button>
+                        <button onClick={() => {
+                            dispatch(setType("create-group"))
+                            dispatch(setIsModalOpen(true))
+                        }} className='bg-black text-lg text-white'>+</button>
                     </div>
                     <div className='flex-col overflow-y-scroll h-40 bg-yellow-500'>
                         {
-                            channels.map((channel, index) => (
-                                <UserBox id={channel.id} />
+                            groups && groups.filter((group, index) => {
+                                return group.groupName.includes(searchName.toLowerCase())
+                            }).map((group) => (
+                                <div key={group.groupId}>
+                                    <GroupBox id={group.groupId} username={group.groupName} />
+                                </div>
                             ))
                         }
 
@@ -58,14 +70,20 @@ const Sidebar = () => {
                     <div className='flex-col overflow-y-scroll h-73 bg-blue-500'>
                         {
                             users && users.filter((user, index) => {
-                                return user.username.includes(searchName.toLowerCase())
-                            }).map((user) => (
-                                <div key={user.id}>
+                                return user.username.includes(searchName)
+                            }).map((user) => {
+                                if (user.id == currentLoginUserId) {
+                                    return null;
+                                }
+                                return (<div key={user.id}>
                                     <UserBox id={user.id} username={user.username} />
-                                </div>
-                            ))
+                                </div>)
+                            }
+
+
+                            )
                         }
-                        
+
                         <UserBox username={"xyz"} />
                     </div>
                 </div>

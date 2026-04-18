@@ -11,8 +11,10 @@ const LoginPage = () => {
         try {
             const res = await loginApi(data);
             if (res.status == 200) {
+                console.log(res.data)
                 localStorage.setItem("token", res.data.token);
                 localStorage.setItem("loginUser", res.data.username);
+                localStorage.setItem("loginUserId", res.data.id);
                 console.log(localStorage.getItem("token"));
                 
                 navigate("/chat")

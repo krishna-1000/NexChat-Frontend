@@ -200,22 +200,38 @@ let iceCandidateWaitingRoom = [];
 let remoteStream = null;
 let Listener = new Set();
 let CallEndedListener = new Set();
+let isMediaPending = false
 
 const rtcConfig = {
     iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
 }
 
-const resetConnetion = () => {
+export const resetConnetion = () => {
+    document.querySelectorAll('video').forEach(video => {
+        if (video.srcObject) {
+            // Get all tracks (audio and video) attached to this HTML element
+            const tracks = video.srcObject.getTracks();
+            tracks.forEach(track => {
+                console.log("☢️ Force-killing track:", track.kind);
+                track.stop();
+            });
+            // Sever the connection to the UI
+            video.srcObject = null;
+        }
+    });
     if (peerConnection) {
         peerConnection.close();
         peerConnection = null;
     }
     if (localStream) {
+        console.info("ALL TRACKS STOPED")
         localStream.getTracks().forEach(track => track.stop());
         localStream = null;
     }
     remoteStream = null;
     iceCandidateWaitingRoom = []
+
+    return null;
 
 }
 
@@ -285,7 +301,7 @@ export const SendCall = async (currentUser, TargetUser) => {
         //Start fresh call everyTime
         resetConnetion();
         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-
+        window.currentActiveStream = localStream;
         const pc = createPeerConnection(localStream, currentUser, TargetUser);
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
@@ -315,6 +331,18 @@ export const ReceiveCall = async (signal) => {
 
         if (signal.type === "offer") {
             try {
+                if (isMediaPending) {
+                    console.error("🛑 Blocked a duplicate camera request! React fired twice.");
+                    return; // Abort this duplicate run completely!
+                }
+
+                // 🚨 2. ENGAGE THE LOCK
+                isMediaPending = true;
+                if (localStream) {
+                    console.warn("Ghost stream detected! Killing old tracks...");
+                    localStream.getTracks().forEach(track => track.stop());
+                    localStream = null;
+                }
                 const currentUser = signal.targetUser;
                 const TargetUser = signal.sender;
                 localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -396,10 +424,11 @@ export const ReceiveCall = async (signal) => {
             }
         }
         else if (signal.type === "hang-up") {
-
+            console.log("hang UP CALLED ")
             resetConnetion();
             CallEndedListener.forEach(fn => fn());
-            alert("reciver disconnected")
+            window.location.reload();
+            alert("other persone disconnected")
 
         }
 
@@ -409,7 +438,7 @@ export const ReceiveCall = async (signal) => {
     }
 }
 
-export const EndCall = async (currentUser, targetUser) => {
+export const EndCall =  (currentUser, targetUser) => {
 
     resetConnetion();
     sendSignal({
@@ -418,7 +447,7 @@ export const EndCall = async (currentUser, targetUser) => {
         sender: currentUser,
         targetUser: targetUser
     })
-    alert("hang up succesfully!")
+    window.location.reload();
 
 }
 

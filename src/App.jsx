@@ -17,7 +17,6 @@ function App() {
 
   return (<>
     <Router>
-      <SocketEventListener/>
       <Routes>
         <Route path='/' element={<HomePage />}></Route>
         <Route path='/login' element={<LoginPage />}></Route>

@@ -4,7 +4,7 @@ import { ImPhoneHangUp } from "react-icons/im";
 import { BsFillMicMuteFill } from "react-icons/bs";
 import useVideoCall from '../../hooks/useVideoCall';
 
-const VideoCallModal = ({hangUpCall, remoteStream, localStream }) => {
+const VideoCallModal = ({muteVideo,muteVoice,hangUpCall, remoteStream, localStream }) => {
   const videoRef = useRef(null);
   const remoteVideoRef = useRef(null);
  
@@ -44,7 +44,10 @@ const VideoCallModal = ({hangUpCall, remoteStream, localStream }) => {
           <button onClick={()=>hangUpCall()} className='hover:scale-120  rounded-2xl'>
             <ImPhoneHangUp />
           </button>
-          <button className='hover:scale-120'>
+          <button onClick={()=>muteVoice(localStream)} className='hover:scale-120'>
+            <BsFillMicMuteFill />
+          </button>
+          <button onClick={()=>muteVideo(localStream)} className=' bg-red-500 hover:scale-120'>
             <BsFillMicMuteFill />
           </button>
         </div>

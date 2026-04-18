@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import fetchChatService from "../service/chatService/fetchChatService";
+import fetchGroupChatService from "../service/chatService/fetchGroupChatService";
 
 const useChat = () => {
     const dispatch = useDispatch();
@@ -9,7 +10,10 @@ const useChat = () => {
         const getChatroom = (id) => {
             fetchChatService(dispatch, id);
         }
-        return { getChatroom }
+        const getChatroomGroup = (id) => {
+            fetchGroupChatService(dispatch, id);
+        }
+        return { getChatroom ,getChatroomGroup}
     } catch (error) {
         console.log("CHAT HOOK" + error.message);
     }

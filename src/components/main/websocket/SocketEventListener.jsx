@@ -8,7 +8,8 @@ import useVideoCall from '../../../hooks/useVideoCall';
 const SocketEventListener = () => {
 
     const dispatch = useDispatch();
-    const {ReceiveVideoCall}= useVideoCall();
+    const { ReceiveVideoCall } = useVideoCall();
+
 
     useEffect(() => {
         let subscription = null;
@@ -28,26 +29,27 @@ const SocketEventListener = () => {
                     console.log(receivedSignal)
                     if (receivedSignal.type === "offer") {
                         console.log("offer is matching.......")
-                        dispatch(setIsModalOpen(true));
-                        dispatch(setType("incoming-call"))
-                        dispatch(setData({
-                            type: "offer",
-                            sender: receivedSignal.sender,
-                            data: receivedSignal.data,
-                            targetUser: receivedSignal.targetUser
-                        }))
+                       
+                            dispatch(setIsModalOpen(true));
+                            dispatch(setType("incoming-call"))
+                            dispatch(setData({
+                                type: "offer",
+                                sender: receivedSignal.sender,
+                                data: receivedSignal.data,
+                                targetUser: receivedSignal.targetUser
+                            }))
                     }
-                    else if(receivedSignal.type ==="answer"){
+                    else if (receivedSignal.type === "answer") {
                         console.log("anser is recieved and matched...")
                         console.log(receivedSignal)
                         ReceiveVideoCall(receivedSignal)
                     }
-                    else if(receivedSignal.type ==="ice"){
+                    else if (receivedSignal.type === "ice") {
                         console.log("ice is recieved and matched...")
                         console.log(receivedSignal)
                         ReceiveVideoCall(receivedSignal)
                     }
-                    else if(receivedSignal.type ==="hang-up"){
+                    else if (receivedSignal.type === "hang-up") {
                         console.log("call Ended of other person")
                         console.log(receivedSignal)
                         ReceiveVideoCall(receivedSignal)
