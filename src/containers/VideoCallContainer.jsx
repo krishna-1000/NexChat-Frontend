@@ -4,10 +4,10 @@ import VideoCallModal from '../modal/CallModal/VideoCallModal';
 import { useDispatch, useSelector } from 'react-redux';
 import IncomingVideoCallModal from '../modal/CallModal/IncomingVideoCallModal'
 import { setIsModalOpen, setType } from '../features/modal/modalSlice';
-import { EndCall, resetConnetion } from '../service/VoiceChatService/videoCallService';
+import { EndCall, rejectCall, resetConnetion } from '../service/VoiceChatService/videoCallService';
 
 const VideoCallContainer = () => {
-    const { localStream, remoteStream, StartVideoCall, ReceiveVideoCall, HangUpCall } = useVideoCall();
+    const { localStream, remoteStream, declineCall, StartVideoCall, ReceiveVideoCall, HangUpCall } = useVideoCall();
     const { data, type } = useSelector((state) => state.modal);
     const loginUser = localStorage.getItem("loginUser");
     const { selectedUserName } = useSelector((state) => state.chat);
@@ -51,9 +51,20 @@ const VideoCallContainer = () => {
 
 
     }
+
+
+
     const closeCall = () => {
         console.log("Call Ended ");
-        HangUpCall(loginUser, selectedUserName)
+        const targetUser = (loginUser == data.sender) ? selectedUserName : data.sender;
+        HangUpCall(loginUser, targetUser)
+        dispatch(setIsModalOpen(false))
+    }
+    const handleRejectCall = () => {
+        console.log("Call rejected ");
+        const targetUser = (loginUser == data.sender) ? selectedUserName : data.sender;
+
+        declineCall(loginUser, targetUser)
         dispatch(setIsModalOpen(false))
     }
 
@@ -83,7 +94,7 @@ const VideoCallContainer = () => {
 
     if (type === "incoming-call") {
         return (
-            <IncomingVideoCallModal dispatch={dispatch} localStream={localStream} callerName={data.callerName} onAccept={handleAcceptCall} />
+            <IncomingVideoCallModal handleRejectCall={handleRejectCall} dispatch={dispatch} localStream={localStream} callerName={data.sender} onAccept={handleAcceptCall} />
         )
     }
     if (type === "video-call") {

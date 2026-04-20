@@ -17,3 +17,10 @@
 // }).map((item,index)=>{
 //     console.log(item.content)
 // })
+
+const chatMessages = {
+    1:{krishna:"hello",ram:"hi"},
+    2:{krishna:"hef",rohan:"hi"},
+}
+chatMessages[3] = {rahul:"hello",Mayank:"hi"}
+console.log(chatMessages[3])

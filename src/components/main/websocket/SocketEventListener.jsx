@@ -54,6 +54,11 @@ const SocketEventListener = () => {
                         console.log(receivedSignal)
                         ReceiveVideoCall(receivedSignal)
                     }
+                    else if (receivedSignal.type === "decline") {
+                        console.log("call rejected")
+                        console.log(receivedSignal)
+                        ReceiveVideoCall(receivedSignal)
+                    }
                 })
             }
         })

@@ -431,6 +431,11 @@ export const ReceiveCall = async (signal) => {
             alert("other persone disconnected")
 
         }
+        else if (signal.type == "decline") {
+            resetConnetion();
+            window.location.reload();
+            alert("Call rejected");
+        }
 
 
     } catch (error) {
@@ -438,12 +443,24 @@ export const ReceiveCall = async (signal) => {
     }
 }
 
-export const EndCall =  (currentUser, targetUser) => {
+export const EndCall = (currentUser, targetUser) => {
 
     resetConnetion();
     sendSignal({
         type: "hang-up",
         data: "hanged up call",
+        sender: currentUser,
+        targetUser: targetUser
+    })
+    window.location.reload();
+
+}
+export const rejectCall = (currentUser, targetUser) => {
+
+    resetConnetion();
+    sendSignal({
+        type: "decline",
+        data: "call rejected",
         sender: currentUser,
         targetUser: targetUser
     })

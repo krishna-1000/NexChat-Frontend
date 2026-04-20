@@ -1,16 +1,19 @@
 import React from 'react'
+import { CiAlarmOn } from 'react-icons/ci'
 
 const SendMessage = ({ message }) => {
   return (
-    <div className='bg-green-600 w-1/2 h-fit flex justify-end gap-2'>
+    <>
+      <div className='bg-gray-900  w-1/2 h-fit flex gap-2 '>
 
-      <div className='text-white flex justify-start items-center text-wrap'>
-        {message}
+        <div className='text-white group flex-1 flex flex-col justify-end text-wrap mr-3'>
+          
+          <p className='w-full bg-green-800 p-2  rounded-tr-3xl rounded-bl-3xl rounded-tl-3xl flex justify-end items-center'> {message} </p>
+          <span className='w-fit rounded-2xl ml-1 bg-black self-end text-white text-xs invisible group-hover:visible'>11:02 am</span>
+        </div>
+       
       </div>
-      <div className='w-12 h-12 rounded-4xl bg-cyan-400 flex items-center justify-center'>
-        Icon
-      </div>
-    </div>
+    </>
   )
 }
 

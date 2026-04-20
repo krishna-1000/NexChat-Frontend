@@ -4,10 +4,13 @@ import fetchGroupChatService from "../service/chatService/fetchGroupChatService"
 
 const useChat = () => {
     const dispatch = useDispatch();
+    const AllMessages = useSelector((state)=>state.chat.chatMessages);
+
 
     try {
 
         const getChatroom = (id) => {
+    
             fetchChatService(dispatch, id);
         }
         const getChatroomGroup = (id) => {

@@ -5,6 +5,8 @@ import RecieveMessage from './RecieveMessage';
 import { useDispatch, useSelector } from 'react-redux';
 import { connectToStomp, sendMessage, subscribeToRoom, unsubscribeFromRoom } from '../../websocket/websocket';
 import { appendMessage, setChatMessages } from '../../features/chat/chatSlice';
+import { MdAttachFile, MdSend } from 'react-icons/md';
+import { FaMicrophone } from 'react-icons/fa6';
 
 const ChatWindow = () => {
   const [inputData, setInputData] = useState("");
@@ -36,16 +38,17 @@ const ChatWindow = () => {
     }
     const messageObj = { content: inputData, chatRoomId: roomId };
     sendMessage(messageObj);
+    setInputData("");
 
   }
 
   if (currentRoomMessages === undefined || !currentRoomMessages || currentRoomMessages == []) {
-    return (<>Nothing to show</>)
+    return (<div className='bg-gray-900 flex justify-center items-center text-4xl w-full h-full'>No user selected !</div>)
   }
 
   return (
-    <div className=' w-full bg-amber-300 h-screen text-white text-lg flex-col'>
-      <div className='bg-white h-130 flex-col overflow-scroll' >
+    <div className=' h-full text-white text-lg flex flex-col border-t  border-gray-500'>
+      <div className=' h-full flex-col overflow-auto border-b border-gray-500 mt-1' >
 
         {
           currentRoomMessages.map((item, index) =>
@@ -62,10 +65,20 @@ const ChatWindow = () => {
         }
 
       </div>
-      <div className=' text-center '>
+      <div className=' text-center h-15  mb-1 rounded-2xl flex  items-center'>
 
-        <input value={inputData} onChange={(e) => setInputData(e.target.value)} type='text' name='sendbox' className='bg-black text-white '></input>
-        <button onClick={() => handleOnClickSend()} className='bg-green-400 cursor-pointer hover:scale-110 text-white '>Send</button>
+        <div className='w-10 flex justify-center h-full items-center '>
+          <MdAttachFile size={30} className='bg-gray-600 rounded-3xl p-1 cursor-pointer hover:scale-110' />
+        </div>
+        <div className='w-full h-10 rounded-2xl '>
+
+          <input placeholder='type message here...' className='text-cyan-100 bg-gray-700 text-sx font-mono placeholder-gray-400 outline-none  rounded-2xl w-full h-full' value={inputData} onChange={(e) => setInputData(e.target.value)} type='text' name='sendbox'></input>
+        </div>
+        <div className='flex w-30 justify-start ml-1 gap-2 '>
+          <button className='bg-gray-600 rounded-3xl p-2 cursor-pointer hover:scale-110'><FaMicrophone size={20} /></button>
+          <button onClick={() => handleOnClickSend()} className='p-2  bg-gray-600 rounded-3xl cursor-pointer hover:scale-110 text-white '><MdSend size={25} /></button>
+
+        </div>
 
       </div>
     </div>

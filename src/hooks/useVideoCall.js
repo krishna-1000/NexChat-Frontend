@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { EndCall, getLocalVideoRef, onCallEnded, onRemoteStreamRedy, ReceiveCall, SendCall } from "../service/VoiceChatService/videoCallService";
+import { EndCall, getLocalVideoRef, onCallEnded, onRemoteStreamRedy, ReceiveCall, rejectCall, SendCall } from "../service/VoiceChatService/videoCallService";
 import { initiateCall } from "../features/call/callSlice";
 import { useEffect, useState } from "react";
 import { setIsModalOpen } from "../features/modal/modalSlice";
@@ -59,20 +59,27 @@ const useVideoCall = () => {
             console.log(error.message)
         }
     }
-    const HangUpCall =  (senderName, targetUser) => {
+    const HangUpCall = (senderName, targetUser) => {
         console.log("STREAM IN HANG UP CALL")
         console.log(localStream)
         console.log(remoteStream)
         EndCall(senderName, targetUser);
-       
+
         setLocalStream(null)
         setRemoteStream(null)
         dispatch(setIsModalOpen(false))
 
     }
+    const declineCall = (senderName, targetUser) => {
+
+        rejectCall(senderName, targetUser);
+
+        dispatch(setIsModalOpen(false))
+
+    }
 
 
-    return { StartVideoCall, HangUpCall, remoteStream, localStream, ReceiveVideoCall };
+    return { StartVideoCall, HangUpCall, declineCall,remoteStream, localStream, ReceiveVideoCall };
 }
 
 export default useVideoCall;

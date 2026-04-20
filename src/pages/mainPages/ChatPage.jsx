@@ -33,16 +33,26 @@ const ChatPage = () => {
 
   return (
 
-    <div className='bg-gray-900 flex'>
+    <div className='bg-gray-900 flex justify-start items-start h-screen'>
       <SocketEventListener />
 
-      <Sidebar />
-
+      <div className='w-85  h-full'>
+        <Sidebar />
+      </div>
       {selectedUser || selectedGroup ?
-        <div className='bg-blue-900 text-white flex-col w-full h-screen'>
-          {selectedGroup ? <GroupNavbar /> : <Navbar />}
-          <ChatWindow />
-        </div> : <div className='text-white flex justify-center items-center  w-full'>NOTHING TO SHOW</div>
+        <div className=' text-white flex flex-col h-full flex-1'>
+
+          <div className='w-full h-15'>
+            {selectedGroup ?
+              <GroupNavbar />
+              : <Navbar />
+            }
+          </div>
+          <div className='w-full flex-1 bg-gray-900 overflow-hidden'>
+            <ChatWindow />
+          </div>
+        </div> :
+        <div className='text-white flex justify-center items-center h-full  w-full font-extralight text-2xl'>Select a user to chat</div>
       }
 
     </div>

@@ -4,6 +4,8 @@ import { setError, setLoading } from "../../features/user/userSlice"
 
 const fetchChatService = async (dispatch, recieverId) => {
 
+    
+
     try {
         dispatch(setLoading(true));
         const chat = await fetchChatroom(recieverId);

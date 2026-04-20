@@ -24,6 +24,7 @@ const chatSlice = createSlice({
         setChatMessages: (state, action) => {
             const { roomId, messages } = action.payload;
             state.chatMessages[roomId] = messages;
+            
         },
         appendMessage: (state, action) => {
             const { roomId, message } = action.payload;
