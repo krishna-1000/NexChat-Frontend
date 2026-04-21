@@ -5,12 +5,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import IncomingVideoCallModal from '../modal/CallModal/IncomingVideoCallModal'
 import { setIsModalOpen, setType } from '../features/modal/modalSlice';
 import { EndCall, rejectCall, resetConnetion } from '../service/VoiceChatService/videoCallService';
+import { endCall,acceptCall } from '../features/call/callSlice';
 
 const VideoCallContainer = () => {
     const { localStream, remoteStream, declineCall, StartVideoCall, ReceiveVideoCall, HangUpCall } = useVideoCall();
-    const { data, type } = useSelector((state) => state.modal);
+    const {  type } = useSelector((state) => state.modal);
+    const {callData} = useSelector((state)=> state.call);
     const loginUser = localStorage.getItem("loginUser");
     const { selectedUserName } = useSelector((state) => state.chat);
+    const {remoteUser} = useSelector((state)=>state.call)
     const dispatch = useDispatch();
 
     const callInitiated = useRef(false)
@@ -25,19 +28,8 @@ const VideoCallContainer = () => {
 
         return () => {
 
-            resetConnetion();
             console.log("CALL CLEANUP..............")
-            callInitiated.current = false;
-
-            console.log("ghost meadia stream")
-            if (window.currentActiveStream) {
-                console.log("Host")
-                console.log(window.currentActiveStream)
-                window.currentActiveStream.getTracks().forEach(track => track.stop());
-                window.currentActiveStream = null;
-                console.log("after clean ghost stream")
-                console.log(window.currentActiveStream)
-            }
+            callInitiated.current = true;
 
 
         }
@@ -45,26 +37,27 @@ const VideoCallContainer = () => {
 
     const handleAcceptCall = async () => {
         console.log("call accepted ");
-        console.info(data)
-        ReceiveVideoCall(data);
+        // dispatch(acceptCall())
+        console.info(callData)
+        ReceiveVideoCall(callData);
         dispatch(setType("video-call"))
 
 
     }
 
 
-
     const closeCall = () => {
         console.log("Call Ended ");
-        const targetUser = (loginUser == data.sender) ? selectedUserName : data.sender;
-        HangUpCall(loginUser, targetUser)
+        dispatch(endCall());
+        
+        HangUpCall(loginUser, remoteUser)
         dispatch(setIsModalOpen(false))
     }
     const handleRejectCall = () => {
+        dispatch(endCall())
         console.log("Call rejected ");
-        const targetUser = (loginUser == data.sender) ? selectedUserName : data.sender;
 
-        declineCall(loginUser, targetUser)
+        declineCall(loginUser, remoteUser)
         dispatch(setIsModalOpen(false))
     }
 
@@ -94,7 +87,7 @@ const VideoCallContainer = () => {
 
     if (type === "incoming-call") {
         return (
-            <IncomingVideoCallModal handleRejectCall={handleRejectCall} dispatch={dispatch} localStream={localStream} callerName={data.sender} onAccept={handleAcceptCall} />
+            <IncomingVideoCallModal handleRejectCall={handleRejectCall} dispatch={dispatch} localStream={localStream} callerName={callData.sender} onAccept={handleAcceptCall} />
         )
     }
     if (type === "video-call") {

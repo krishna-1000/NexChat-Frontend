@@ -12,19 +12,39 @@ import Test from './components/main/Test'
 import Temp from './components/main/Temp'
 import Modal from './modal/Modal'
 import SocketEventListener from './components/main/websocket/SocketEventListener'
+import LogoutPage from './pages/authPage/LogoutPage'
+import ProtectedRoute from './layout/ProtectedRoute'
+import PublicRoute from './layout/PublicRoute'
 
 function App() {
 
+
   return (<>
     <Router>
+
       <Routes>
-        <Route path='/' element={<HomePage />}></Route>
-        <Route path='/login' element={<LoginPage />}></Route>
-        <Route path='/signup' element={<SingUpPage />}></Route>
-        <Route path='/chat' element={<ChatPage />}></Route>
-        <Route path='/temp' element={<Test/>}></Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<HomePage />}></Route>
+            <Route path="/chat" element={<ChatPage />} />
+            <Route path='/logout' element={<LogoutPage />}></Route>
+            <Route path='/temp' element={<Test />}></Route>
+          
+        </Route>
+
+
+
+
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SingUpPage />} />
+        </Route>
+
+
+
+
       </Routes>
-    <Modal/>
+      <Modal />
     </Router>
   </>)
 }

@@ -7,6 +7,7 @@ const initialState = {
     remoteUser: null,
     isMuted: false,
     isVideoOff: false,
+    callData: []
 }
 
 const callSlice = createSlice({
@@ -31,9 +32,16 @@ const callSlice = createSlice({
         },
         toggleAudio: (state) => {
             state.isMuted = !state.isMuted;
+        },
+        setCallData: (state, action) => {
+            console.log("warning of setting datat ")
+            console.warn(action.payload)
+            state.callData = action.payload
+            console.log("warning AGIM.... ")
+            console.warn(state.callData)
         }
     }
 });
 
-export const { initiateCall, receiveCall, acceptCall, endCall, toggleAudio } = callSlice.actions;
+export const { initiateCall,setCallData, receiveCall, acceptCall, endCall, toggleAudio } = callSlice.actions;
 export default callSlice.reducer;

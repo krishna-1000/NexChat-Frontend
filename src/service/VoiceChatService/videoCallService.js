@@ -312,6 +312,7 @@ export const SendCall = async (currentUser, TargetUser) => {
             sender: currentUser,
             targetUser: TargetUser
         })
+        console.info("PEERI IN SEND CALL" + peerConnection.connectionState)
 
         return localStream;
 
@@ -333,10 +334,10 @@ export const ReceiveCall = async (signal) => {
             try {
                 if (isMediaPending) {
                     console.error("🛑 Blocked a duplicate camera request! React fired twice.");
-                    return; // Abort this duplicate run completely!
+                    return;
                 }
 
-                // 🚨 2. ENGAGE THE LOCK
+
                 isMediaPending = true;
                 if (localStream) {
                     console.warn("Ghost stream detected! Killing old tracks...");
@@ -347,7 +348,10 @@ export const ReceiveCall = async (signal) => {
                 const TargetUser = signal.sender;
                 localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
 
+
+
                 const pc = createPeerConnection(localStream, currentUser, TargetUser);
+
                 await pc.setRemoteDescription(new RTCSessionDescription(signal.data));
 
 
@@ -384,14 +388,21 @@ export const ReceiveCall = async (signal) => {
                 console.warn(signal)
                 console.warn("anwer come")
                 if (!peerConnection) {
-                    console.log("Peer connetion is not available")
+                    console.warn("PC not ready, delaying answer...");
+
+                    setTimeout(() => {
+                        ReceiveCall(signal);
+                    }, 500);
+
                     return;
                 }
+                
+               
                 if (peerConnection.signalingState === "have-local-offer") {
 
 
                     await peerConnection.setRemoteDescription(new RTCSessionDescription(signal.data));
-                    console.warn("  set remote ans come")
+                    console.warn("  set remote description ans came")
 
                     //draining all iceCandidates
 
@@ -426,14 +437,15 @@ export const ReceiveCall = async (signal) => {
         else if (signal.type === "hang-up") {
             console.log("hang UP CALLED ")
             resetConnetion();
+            isMediaPending = false;
             CallEndedListener.forEach(fn => fn());
-            window.location.reload();
             alert("other persone disconnected")
 
         }
         else if (signal.type == "decline") {
             resetConnetion();
-            window.location.reload();
+            isMediaPending = false;
+            CallEndedListener.forEach(fn => fn());
             alert("Call rejected");
         }
 
@@ -444,7 +456,6 @@ export const ReceiveCall = async (signal) => {
 }
 
 export const EndCall = (currentUser, targetUser) => {
-
     resetConnetion();
     sendSignal({
         type: "hang-up",
@@ -452,11 +463,13 @@ export const EndCall = (currentUser, targetUser) => {
         sender: currentUser,
         targetUser: targetUser
     })
-    window.location.reload();
+    isMediaPending = false;
+    //  window.location.reload();
 
 }
 export const rejectCall = (currentUser, targetUser) => {
 
+    isMediaPending = false;
     resetConnetion();
     sendSignal({
         type: "decline",
@@ -464,7 +477,6 @@ export const rejectCall = (currentUser, targetUser) => {
         sender: currentUser,
         targetUser: targetUser
     })
-    window.location.reload();
 
 }
 

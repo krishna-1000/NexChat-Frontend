@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { EndCall, getLocalVideoRef, onCallEnded, onRemoteStreamRedy, ReceiveCall, rejectCall, SendCall } from "../service/VoiceChatService/videoCallService";
-import { initiateCall } from "../features/call/callSlice";
+import { initiateCall, receiveCall } from "../features/call/callSlice";
 import { useEffect, useState } from "react";
 import { setIsModalOpen } from "../features/modal/modalSlice";
 
@@ -38,7 +38,9 @@ const useVideoCall = () => {
             const localStream = await SendCall(senderName, targetUser);
             if (localStream) {
                 console.log("Stream received in hook:", localStream);
-                setLocalStream(localStream); // This triggers the re-render for your Modal
+                setLocalStream(localStream);
+                dispatch(initiateCall(targetUser));
+                 // This triggers the re-render for your Modal
             }
         } catch (error) {
             console.log(error.message)

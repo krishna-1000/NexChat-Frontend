@@ -24,3 +24,5 @@ const chatMessages = {
 }
 chatMessages[3] = {rahul:"hello",Mayank:"hi"}
 console.log(chatMessages[3])
+
+chatMessages[4] = {krishna:"hef",rohan:"hi"}

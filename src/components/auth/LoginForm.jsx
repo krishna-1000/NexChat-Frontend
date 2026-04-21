@@ -3,13 +3,13 @@ import { FiUser, FiLock, FiEye, FiEyeOff, FiAlertCircle } from "react-icons/fi";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { Navigate, useNavigate } from "react-router-dom";
 
-const LoginForm = ({ onSubmit }) => {
+const LoginForm = ({error2,onSubmit }) => {
 
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [focused, setFocused] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(error2);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -18,7 +18,7 @@ const LoginForm = ({ onSubmit }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // stop browser from refreshing the page
+    e.preventDefault(); 
 
     if (!formData.username.trim() || !formData.password.trim()) {
       setError("Please fill in all fields.");
@@ -29,8 +29,12 @@ const LoginForm = ({ onSubmit }) => {
     setError("");
 
     try {
-      await onSubmit?.(formData);
-      
+     const res =  await onSubmit?.(formData);
+     
+     if(res == undefined){
+      setError("Please enter valid values!")
+     }
+
     } catch (err) {
       setError(err?.message || "Invalid credentials. Try again.");
     } finally {

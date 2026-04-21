@@ -6,37 +6,43 @@ import { useDispatch, useSelector } from 'react-redux';
 import { connectToStomp, sendMessage, subscribeToRoom, unsubscribeFromRoom } from '../../websocket/websocket';
 import { appendMessage, setChatMessages } from '../../features/chat/chatSlice';
 import { MdAttachFile, MdSend } from 'react-icons/md';
-import { FaMicrophone } from 'react-icons/fa6';
+import { FaMicrophone, FaSpinner } from 'react-icons/fa6';
 
 const ChatWindow = () => {
+    const {  loading } = useSelector((state) => state.user);
+  
   const [inputData, setInputData] = useState("");
   const receiverId = useSelector((state) => state.chat.selectedUserId);
+  const groupId = useSelector((state) => state.group.selectedGroup);
   const allMessages = useSelector((state) => state.chat.chatMessages);
-  const roomId = useSelector((state) => state.chat.chatRoomId);
-  const currentRoomMessages = allMessages[roomId] || [];
+  const allroomId = useSelector((state) => state.chat.chatRoomsId);
+
+  const currentChatRoomId =receiverId?allroomId[receiverId]:allroomId[groupId]
+  const currentRoomMessages = allMessages[currentChatRoomId] || [];
   const dispatch = useDispatch();
   const currentUserId = localStorage.getItem("loginUserId");
 
 
   useEffect(() => {
+
     connectToStomp(() => {
-      if (roomId) {
-        subscribeToRoom(roomId, (recievedMsg) => {
-          dispatch(appendMessage({ roomId: roomId, message: recievedMsg }));
+      if (currentChatRoomId) {
+        subscribeToRoom(currentChatRoomId, (recievedMsg) => {
+          dispatch(appendMessage({ roomId: currentChatRoomId, message: recievedMsg }));
         });
       }
     })
 
     return () => {
-      if (roomId) unsubscribeFromRoom(roomId);
+      if (currentChatRoomId) unsubscribeFromRoom(currentChatRoomId);
     };
-  }, [roomId, dispatch])
+  }, [currentChatRoomId, dispatch])
 
   const handleOnClickSend = () => {
     if (inputData.length == "") {
       return;
     }
-    const messageObj = { content: inputData, chatRoomId: roomId };
+    const messageObj = { content: inputData, chatRoomId: currentChatRoomId };
     sendMessage(messageObj);
     setInputData("");
 
@@ -44,6 +50,10 @@ const ChatWindow = () => {
 
   if (currentRoomMessages === undefined || !currentRoomMessages || currentRoomMessages == []) {
     return (<div className='bg-gray-900 flex justify-center items-center text-4xl w-full h-full'>No user selected !</div>)
+  }
+
+  if (loading) {
+    return (<div className='bg-gray-900 h-screen w-full flex justify-center items-center'><FaSpinner color='green' size={60}/></div>)
   }
 
   return (

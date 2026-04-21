@@ -8,19 +8,14 @@ import { setIsModalOpen, setType } from '../../features/modal/modalSlice'
 
 const UserBox = ({ id, username }) => {
     const dispatch = useDispatch();  
-    const allMessages = useSelector((state) => state.chat.chatMessages);
-      const roomId = useSelector((state) => state.chat.chatRoomId);
-    
-    const currentRoomMessages = allMessages[roomId];
-
+  
     const {getChatroom} = useChat();
 
     const handelSelectUser = ()=>{
         dispatch(setSelectedGroup(""))
         dispatch(setSelectedUserId(id));
         dispatch(setSelectedUserName(username))
-        console.info("this i s inofrmttion")
-        console.log(currentRoomMessages)
+        
         getChatroom(id);
 
     }

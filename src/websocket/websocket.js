@@ -3,6 +3,15 @@ import { Client } from "@stomp/stompjs";
 
 let stompClient = null;
 let subscriptions = new Map();
+export const stopConnection = () => {
+    if (stompClient) {
+        stompClient.deactivate();
+        if (stompClient) {
+            stompClient.forceDisconnect()
+
+        }
+    }
+}
 export const connectToStomp = (onConnectCallback) => {
     if (stompClient && stompClient.connected) {
         console.log("Already connected, firing callback.");
@@ -36,6 +45,7 @@ export const connectToStomp = (onConnectCallback) => {
         },
     });
     stompClient.activate();
+
 
 }
 
@@ -87,7 +97,7 @@ export const sendSignal = (payload) => {
 
 export const subscribeToSignal = (onSignalRecieved) => {
     console.log("signal aya.............. ")
-   
+
     if (stompClient && stompClient.connected) {
 
         return stompClient.subscribe("/user/queue/webrtc", (msg) => {

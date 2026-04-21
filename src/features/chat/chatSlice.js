@@ -7,7 +7,7 @@ const initialState = {
     selectedUserName: "",
     chatLoading: false,
     chatMessages: {},
-    chatRoomId: "",
+    chatRoomsId: {},
     chatError: null
 
 }
@@ -24,7 +24,7 @@ const chatSlice = createSlice({
         setChatMessages: (state, action) => {
             const { roomId, messages } = action.payload;
             state.chatMessages[roomId] = messages;
-            
+
         },
         appendMessage: (state, action) => {
             const { roomId, message } = action.payload;
@@ -34,8 +34,9 @@ const chatSlice = createSlice({
             }
             state.chatMessages[roomId].push(message);
         },
-        setChatRoomId: (state, action) => {
-            state.chatRoomId = action.payload
+        setChatRoomsId: (state, action) => {
+            const { userId, chatRoomId } = action.payload
+            state.chatRoomsId[userId] = chatRoomId
         },
         setChatLoading: (state, action) => {
             state.loading = action.payload
@@ -46,6 +47,6 @@ const chatSlice = createSlice({
     }
 })
 
-export const { setSelectedUserName, setChatLoading, appendMessage, setChatError, setSelectedUserId, setChatMessages, setChatRoomId } = chatSlice.actions
+export const { setSelectedUserName, setChatLoading, appendMessage, setChatError, setSelectedUserId, setChatMessages, setChatRoomsId } = chatSlice.actions
 export default chatSlice.reducer;
 

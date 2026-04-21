@@ -1,13 +1,15 @@
 import React from 'react'
 import SignUpForm from '../../components/auth/SignUpForm'
 import {signUpApi} from '../../api/auth/signUpApi'
+import { useNavigate } from 'react-router-dom';
 
 const SingUpPage = () => {
+    const navigate = useNavigate();
 
     const handleSignup = async (data) => {
         try {
             const response = await signUpApi(data);
-            console.log(response);
+            navigate("/login")
             return response
         } catch (error) {
             console.log(error.message)

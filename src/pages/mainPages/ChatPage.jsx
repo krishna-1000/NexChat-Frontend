@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { connectToStomp } from '../../websocket/websocket'
 import SocketEventListener from '../../components/main/websocket/SocketEventListener'
 import GroupNavbar from '../../components/main/GroupNavbar'
+import { FaSpinner } from 'react-icons/fa6'
 
 const ChatPage = () => {
   const { users, loading, error } = useSelector((state) => state.user);
@@ -17,15 +18,11 @@ const ChatPage = () => {
   useEffect(() => {
     getUsers();
     getGroups(loginUserId);
-    // connectToStomp();
-
 
   }, [])
 
 
-  if (loading) {
-    return (<div>Loading....</div>)
-  }
+  
   // if (error) {
   //   console.log(error)
   //   return (<div>{error}</div>)
