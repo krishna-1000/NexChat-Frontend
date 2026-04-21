@@ -27,7 +27,7 @@ export const connectToStomp = (onConnectCallback) => {
 
 
     stompClient = new Client({
-        brokerURL: "ws://localhost:8080/ws",
+        brokerURL: import.meta.env.VITE_WS_URL,
         reconnectDelay: 5000,
         connectHeaders: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
