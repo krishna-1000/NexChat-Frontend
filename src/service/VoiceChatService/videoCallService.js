@@ -203,7 +203,10 @@ let CallEndedListener = new Set();
 let isMediaPending = false
 
 const rtcConfig = {
-    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+    iceServers: [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: "stun:stun1.l.google.com:19302" }
+]
 }
 
 export const resetConnetion = () => {
@@ -396,8 +399,8 @@ export const ReceiveCall = async (signal) => {
 
                     return;
                 }
-                
-               
+
+
                 if (peerConnection.signalingState === "have-local-offer") {
 
 
