@@ -8,10 +8,12 @@ import CreateGroupModal from './CreateGroupModal';
 import { GiCrossMark } from 'react-icons/gi';
 import useVideoCall from '../hooks/useVideoCall';
 import Profile from './Profile';
+import GroupProfile from './GroupProfile';
 const Modal = () => {
-    const { isModalOpen, type, data } = useSelector((state) => state.modal);
+    const { isModalOpen, type } = useSelector((state) => state.modal);
+    const {callData} = useSelector((state)=>state.call.callData);
     const dispatch = useDispatch();
-    const loginUser = localStorage.getItem("loginUser");
+    const loginUser = useSelector((state)=>state.profile.loginUserName);
     const { declineCall, HangUpCall } = useVideoCall();
 
     if (!isModalOpen || !type) return null;
@@ -24,8 +26,12 @@ const Modal = () => {
                 return <VideoCallContainer />
             case "create-group":
                 return <CreateGroupModal />
+            case "voice-call":
+                return <VideoCallContainer />
             case "Profile":
                 return <Profile />
+            case "GroupProfile":
+                return <GroupProfile />
             default:
                 return null;
         }
@@ -33,10 +39,10 @@ const Modal = () => {
 
     const handleOnCloseModal = () => {
         if (type == "incoming-call") {
-            declineCall(loginUser, data.sender)
+            declineCall(loginUser, callData.sender)
         }
         else if (type == "video-call") {
-            HangUpCall(loginUser, data.sender)
+            HangUpCall(loginUser, callData.sender)
             dispatch(setIsModalOpen(false))
         }
 
@@ -52,9 +58,9 @@ const Modal = () => {
                 if (type != "video-call") {
                     handleOnCloseModal()
                 }
-            }} // Close when clicking the backdrop
+            }}
         >
-            <div onClick={(e) => e.stopPropagation()} className='p-2 shadow-2xl shadow-white z-999 rounded-2xl min-h-100 min-w-100 max-h-screen h-fit w-fit max-w-full bg-gray-900 text-white flex-col '>
+            <div onClick={(e) => e.stopPropagation()} className='p-2 shadow-2xl shadow-white z-999 rounded-2xl max-h-screen h-fit w-fit max-w-full bg-gray-900 text-white flex-col '>
                 <div className=' flex justify-between border-b border-gray-500'>
                     <label className='text-center mb-2 font-bold'>{type}</label>
                     <span onClick={() => handleOnCloseModal()}><GiCrossMark /></span>

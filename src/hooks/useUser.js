@@ -1,6 +1,7 @@
 import { useDispatch, useStore } from "react-redux";
 import fetchUserService, { fetchGroupService } from "../service/userService/fetchUserService";
 import { deleteGroupApi, exitFromGroupApi } from "../api/chat/groupChatApi";
+import { deleteUserAccount } from "../api/user/userApi";
 
 const useUser = () => {
     const dispatch = useDispatch();
@@ -21,7 +22,12 @@ const useUser = () => {
 
         return response.data;
     }
+    const deleteAccount = (userId)=>{
+        const response = deleteUserAccount(userId);
+        console.log(response.data)
+        return response.data;
+    }
 
-    return { getUsers,exitFromGroup, getGroups, deleteGroup };
+    return { getUsers,exitFromGroup, getGroups, deleteGroup,deleteAccount };
 }
 export default useUser;

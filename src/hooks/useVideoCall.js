@@ -31,11 +31,11 @@ const useVideoCall = () => {
         }
     }, [])
 
-    const StartVideoCall = async (senderName, targetUser) => {
+    const StartVideoCall = async (senderName, targetUser,callType) => {
 
         try {
 
-            const localStream = await SendCall(senderName, targetUser);
+            const localStream = await SendCall(senderName, targetUser,callType);
             if (localStream) {
                 console.log("Stream received in hook:", localStream);
                 setLocalStream(localStream);

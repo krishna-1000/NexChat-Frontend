@@ -18,11 +18,22 @@
 //     console.log(item.content)
 // })
 
-const chatMessages = {
-    1:{krishna:"hello",ram:"hi"},
-    2:{krishna:"hef",rohan:"hi"},
-}
-chatMessages[3] = {rahul:"hello",Mayank:"hi"}
-console.log(chatMessages[3])
+// const chatMessages = {
+//     1:{krishna:"hello",ram:"hi"},
+//     2:{krishna:"hef",rohan:"hi"},
+// }
+// chatMessages[3] = {rahul:"hello",Mayank:"hi"}
+// console.log(chatMessages[3])
 
-chatMessages[4] = {krishna:"hef",rohan:"hi"}
+// chatMessages[4] = {krishna:"hef",rohan:"hi"}
+// console.log(Object.keys(chatMessages).length)
+
+const mess = {};
+
+mess[1] =  0;
+mess[1]++
+mess[1]++
+mess[1]++
+
+
+console.log(mess)

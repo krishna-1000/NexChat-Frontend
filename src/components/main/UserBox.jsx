@@ -6,7 +6,7 @@ import useChat from '../../hooks/useChat'
 import { setSelectedGroup } from '../../features/chat/groupSlice'
 import { setIsModalOpen, setType } from '../../features/modal/modalSlice'
 
-const UserBox = ({ id, username }) => {
+const UserBox = ({userBio, id, username }) => {
     const dispatch = useDispatch();  
   
     const {getChatroom} = useChat();
@@ -31,11 +31,10 @@ const UserBox = ({ id, username }) => {
             <div onClick={()=>handelSelectUser()} className=' rounded-2xl  w-full cursor-pointer '>
                 <div className=' flex justify-between items-center rounded-2xl'>
                     <div  className='font-mono text-cyan-100'>{username}</div>
-                    <div className='text-xs '>1 hour</div>
+                    
                 </div>
                 <div className=' text-black flex justify-between rounded-2xl '>
-                    <div className='text-sm ml-2 text-white'>this is my note for cha.</div>
-                    <div className='text-xs rounded-2xl mr-2  bg-green-400 w-3 h-4 flex justify-center items-center font-extrabold text-white'>7</div>
+                    <div className='text-sm ml-2 text-white'>{userBio}</div>
                 </div>
             </div>
         </div>
@@ -43,30 +42,3 @@ const UserBox = ({ id, username }) => {
 }
 
 export default UserBox
-
-// return (
-//     <div key={id} className='flex items-center h-14 px-2 py-1 rounded-xl cursor-pointer hover:bg-gray-800 transition-colors duration-200 group'>
-        
-//         {/* Avatar */}
-//         <div className='flex items-center justify-center w-9 h-9 rounded-full bg-cyan-950 border-2 border-cyan-800 shrink-0 mr-3'>
-//             <span className='text-cyan-400 font-bold font-mono text-xs uppercase'>
-//                 {username?.charAt(0)}{username?.charAt(1)}
-//             </span>
-//         </div>
-
-//         {/* Info */}
-//         <div onClick={() => handelSelectUser()} className='flex flex-col flex-1 min-w-0'>
-//             <div className='flex justify-between items-center'>
-//                 <span className='text-sm font-semibold text-gray-200 truncate'>{username}</span>
-//                 <span className='text-xs font-mono text-gray-600 shrink-0 ml-2'>1h ago</span>
-//             </div>
-//             <div className='flex justify-between items-center mt-0.5'>
-//                 <span className='text-xs font-mono text-gray-500 truncate'>this is my note for chat..</span>
-//                 <span className='ml-2 shrink-0 min-w-4 h-4 px-1 rounded-full bg-cyan-500 text-gray-950 text-xs font-bold font-mono flex items-center justify-center'>
-//                     7
-//                 </span>
-//             </div>
-//         </div>
-
-//     </div>
-// )

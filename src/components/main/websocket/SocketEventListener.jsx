@@ -25,7 +25,8 @@ const SocketEventListener = () => {
                                 type: "offer",
                                 sender: receivedSignal.sender,
                                 data: receivedSignal.data,
-                                targetUser: receivedSignal.targetUser
+                                targetUser: receivedSignal.targetUser,
+                                callType:receivedSignal.callType
                             }))
                             dispatch(receiveCall(receivedSignal.sender))
                     }

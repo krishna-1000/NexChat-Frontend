@@ -11,12 +11,13 @@ const CreateGroupModal = () => {
   const dispatch = useDispatch();
   const loginUserId = localStorage.getItem("loginUserId")
   const { users } = useSelector((state) => state.user);
+  const adminName = localStorage.getItem("loginUserName")
 
   const handleOnCreateGroup = async () => {
-    if (!inputData) {
+    alert(adminName);
+    if (!inputData || !adminName) {
       return;
     }
-    const adminName = localStorage.getItem("loginUser");
     const formData = {
       groupName: inputData,
       adminName: adminName,
@@ -27,10 +28,7 @@ const CreateGroupModal = () => {
     if (data) {
       dispatch(setGroupName(data.groupName))
       dispatch(setGroupId(data.groupId))
-      dispatch(appendGroup({
-        groupName: data.groupName,
-        groupId: data.groupId
-      }))
+      dispatch(appendGroup(data))
     }
     dispatch(setIsModalOpen(false))
   }
@@ -50,14 +48,14 @@ const CreateGroupModal = () => {
         <div className='flex gap-2 h-full'>
           <label className='w-fit whitespace-nowrap  font-mono h-full  flex justify-center items-center'>Group Name</label>
           <input placeholder='type group name ...' className='text-cyan-100 bg-gray-700 font-mono placeholder-gray-600 outline-none rounded-2xl font-semibold text-lg w-full h-full' type='text'
-          name='groupName' value={inputData} onChange={(e) => setInputData(e.target.value)} ></input>
+            name='groupName' value={inputData} onChange={(e) => setInputData(e.target.value)} ></input>
         </div>
         <div className=' pl-1s '>
-        <label className='bg-gray-700 rounded-2xl pl-1 pr-5'>Total members : <span>{members.length}</span></label>
+          <label className='bg-gray-700 rounded-2xl pl-1 pr-5'>Total members : <span>{members.length}</span></label>
         </div>
       </header>
       <div className='flex-1  mb-1 ml-1 border-t border-gray-500 border-b mt-2 overflow-auto'>
-        <ul className='flex flex-col gap-2 mt-1 '>
+        <ul className='flex flex-col gap-2 mt-1 overflow-auto '>
           {
             users && users.map((user) => {
               if (user.id == loginUserId) {

@@ -30,7 +30,7 @@ const LoginForm = ({error2,onSubmit }) => {
 
     try {
      const res =  await onSubmit?.(formData);
-     
+     console.log(res)
      if(res == undefined){
       setError("Please enter valid values!")
      }

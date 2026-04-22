@@ -204,9 +204,9 @@ let isMediaPending = false
 
 const rtcConfig = {
     iceServers: [
-    { urls: 'stun:stun.l.google.com:19302' },
-    { urls: "stun:stun1.l.google.com:19302" }
-]
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: "stun:stun1.l.google.com:19302" }
+    ]
 }
 
 export const resetConnetion = () => {
@@ -298,12 +298,19 @@ const createPeerConnection = (currentStream, currentUser, TargetUser) => {
 
 }
 
-export const SendCall = async (currentUser, TargetUser) => {
+export const SendCall = async (currentUser, TargetUser, callType) => {
 
     try {
         //Start fresh call everyTime
         resetConnetion();
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        if (callType == "voice-call") {
+
+            localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        }
+        else {
+            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+
+        }
         window.currentActiveStream = localStream;
         const pc = createPeerConnection(localStream, currentUser, TargetUser);
         const offer = await pc.createOffer();
@@ -313,7 +320,8 @@ export const SendCall = async (currentUser, TargetUser) => {
             type: "offer",
             data: offer,
             sender: currentUser,
-            targetUser: TargetUser
+            targetUser: TargetUser,
+            callType: callType
         })
         console.info("PEERI IN SEND CALL" + peerConnection.connectionState)
 
@@ -334,6 +342,8 @@ export const ReceiveCall = async (signal) => {
     try {
 
         if (signal.type === "offer") {
+            console.log(signal)
+            console.log("type offer")
             try {
                 if (isMediaPending) {
                     console.error("🛑 Blocked a duplicate camera request! React fired twice.");
@@ -349,10 +359,15 @@ export const ReceiveCall = async (signal) => {
                 }
                 const currentUser = signal.targetUser;
                 const TargetUser = signal.sender;
-                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
 
+                if (signal.callType == "voice-call") {
 
+                    localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                }
+                else {
+                    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
 
+                }
                 const pc = createPeerConnection(localStream, currentUser, TargetUser);
 
                 await pc.setRemoteDescription(new RTCSessionDescription(signal.data));
@@ -372,7 +387,8 @@ export const ReceiveCall = async (signal) => {
                     type: "answer",
                     data: answer,
                     sender: currentUser,
-                    targetUser: TargetUser
+                    targetUser: TargetUser,
+                    callType:signal.callType
                 })
 
                 return localStream;
@@ -391,11 +407,7 @@ export const ReceiveCall = async (signal) => {
                 console.warn(signal)
                 console.warn("anwer come")
                 if (!peerConnection) {
-                    console.warn("PC not ready, delaying answer...");
-
-                    setTimeout(() => {
-                        ReceiveCall(signal);
-                    }, 500);
+                    console.alert("unable to connect retry..");
 
                     return;
                 }
@@ -442,7 +454,7 @@ export const ReceiveCall = async (signal) => {
             resetConnetion();
             isMediaPending = false;
             CallEndedListener.forEach(fn => fn());
-            alert("other persone disconnected")
+            alert(signal.sender+" hang-up call")
 
         }
         else if (signal.type == "decline") {

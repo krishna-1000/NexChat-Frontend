@@ -26,10 +26,10 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<HomePage />}></Route>
-            <Route path="/chat" element={<ChatPage />} />
-            <Route path='/logout' element={<LogoutPage />}></Route>
-            <Route path='/temp' element={<Test />}></Route>
-          
+          <Route path='/logout' element={<LogoutPage />}></Route>
+          <Route path='/temp' element={<Test />}></Route>
+          <Route path="/chat" element={<ChatPage />} />
+
         </Route>
 
 
@@ -38,6 +38,8 @@ function App() {
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SingUpPage />} />
+
+
         </Route>
 
 

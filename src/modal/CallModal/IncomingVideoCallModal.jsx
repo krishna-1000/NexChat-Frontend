@@ -5,7 +5,7 @@ import { BsFillMicMuteFill } from "react-icons/bs";
 import { acceptCall } from '../../features/call/callSlice';
 import { FaPhone, FaPhoneSlash } from 'react-icons/fa6';
 
-const IncomingVideoCallModal = ({ handleRejectCall, localStream, callerName, onAccept }) => {
+const IncomingVideoCallModal = ({ callType,handleRejectCall, localStream, callerName, onAccept }) => {
 
   const localVideoRef = useRef(null);
 
@@ -30,7 +30,7 @@ const IncomingVideoCallModal = ({ handleRejectCall, localStream, callerName, onA
       <div>
         <div className=' absolute bottom-0  w-full h-20 flex justify-evenly items-center'>
 
-          <button onClick={() => onAccept()} className='hover:scale-120  rounded-4xl flex justify-center items-center bg-green-500 w-15 h-15'>
+          <button onClick={() => onAccept(callType)} className='hover:scale-120  rounded-4xl flex justify-center items-center bg-green-500 w-15 h-15'>
             <FaPhone className='text-white' size={40} />
           </button>
           <button onClick={() => handleRejectCall()} className='hover:scale-120  rounded-4xl flex justify-center items-center bg-red-500 w-15 h-15'>

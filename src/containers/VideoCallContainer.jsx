@@ -6,12 +6,13 @@ import IncomingVideoCallModal from '../modal/CallModal/IncomingVideoCallModal'
 import { setIsModalOpen, setType } from '../features/modal/modalSlice';
 import { EndCall, rejectCall, resetConnetion } from '../service/VoiceChatService/videoCallService';
 import { endCall,acceptCall } from '../features/call/callSlice';
+import VoiceCallModal from '../modal/CallModal/VoiceCallModal';
 
 const VideoCallContainer = () => {
     const { localStream, remoteStream, declineCall, StartVideoCall, ReceiveVideoCall, HangUpCall } = useVideoCall();
     const {  type } = useSelector((state) => state.modal);
     const {callData} = useSelector((state)=> state.call);
-    const loginUser = localStorage.getItem("loginUser");
+    const loginUser = useSelector((state)=>state.profile.loginUserName)
     const { selectedUserName } = useSelector((state) => state.chat);
     const {remoteUser} = useSelector((state)=>state.call)
     const dispatch = useDispatch();
@@ -20,9 +21,9 @@ const VideoCallContainer = () => {
 
     useEffect(() => {
 
-        if (type === "video-call" && !localStream && !callInitiated.current) {
+        if ((type === "video-call"||type === "voice-call") && !localStream && !callInitiated.current) {
             console.log("-----------CALL START---------- ")
-            StartVideoCall(loginUser, selectedUserName)
+            StartVideoCall(loginUser, selectedUserName,type)
             callInitiated.current = true;
         }
 
@@ -35,12 +36,18 @@ const VideoCallContainer = () => {
         }
     }, [dispatch])
 
-    const handleAcceptCall = async () => {
+    const handleAcceptCall = async (callType) => {
         console.log("call accepted ");
         // dispatch(acceptCall())
         console.info(callData)
         ReceiveVideoCall(callData);
-        dispatch(setType("video-call"))
+        if(callType == "video-call"){
+            dispatch(setType("video-call"))
+
+        }
+        else{
+            dispatch(setType("voice-call"))
+        }
 
 
     }
@@ -87,7 +94,7 @@ const VideoCallContainer = () => {
 
     if (type === "incoming-call") {
         return (
-            <IncomingVideoCallModal handleRejectCall={handleRejectCall} dispatch={dispatch} localStream={localStream} callerName={callData.sender} onAccept={handleAcceptCall} />
+            <IncomingVideoCallModal callType={callData.callType} handleRejectCall={handleRejectCall} dispatch={dispatch} localStream={localStream} callerName={callData.sender} onAccept={handleAcceptCall} />
         )
     }
     if (type === "video-call") {
@@ -96,6 +103,11 @@ const VideoCallContainer = () => {
 
         return (
             <VideoCallModal muteVideo={muteVideo} muteVoice={muteVoice} hangUpCall={closeCall} remoteStream={remoteStream} localStream={localStream} />
+        )
+    }
+    if(type === "voice-call"){
+        return (
+            <VoiceCallModal muteVideo={muteVideo} muteVoice={muteVoice} hangUpCall={closeCall} remoteStream={remoteStream} localStream={localStream} />
         )
     }
 

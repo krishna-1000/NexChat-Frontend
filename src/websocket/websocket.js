@@ -60,6 +60,7 @@ export const subscribeToRoom = (roomId, onMessageReceived) => {
     }
 
     const sub = stompClient.subscribe(`/topic/room.${roomId}`, (msg) => {
+        
         onMessageReceived(JSON.parse(msg.body));
     });
 

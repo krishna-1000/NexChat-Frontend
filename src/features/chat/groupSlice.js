@@ -15,6 +15,7 @@ const groupSlice = createSlice({
             state.groupId = action.payload
         },
         setGroup: (state, action) => {
+            const {groupId} = action.payload
             state.groups = action.payload
         },
         appendGroup: (state, action) => {
@@ -25,6 +26,7 @@ const groupSlice = createSlice({
         },
         setSelectedGroup: (state, action) => {
             state.selectedGroup = action.payload
+            
         },
         setGroupAdmin: (state, action) => {
             state.selectedGroupAdmin = action.payload

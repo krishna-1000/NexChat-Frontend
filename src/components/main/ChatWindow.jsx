@@ -4,7 +4,7 @@ import SendMessage from './SendMessage';
 import RecieveMessage from './RecieveMessage';
 import { useDispatch, useSelector } from 'react-redux';
 import { connectToStomp, sendMessage, subscribeToRoom, unsubscribeFromRoom } from '../../websocket/websocket';
-import { appendMessage, setChatMessages } from '../../features/chat/chatSlice';
+import { appendMessage, setChatMessages, setMessageSender } from '../../features/chat/chatSlice';
 import { MdAttachFile, MdSend } from 'react-icons/md';
 import { FaMicrophone, FaSpinner } from 'react-icons/fa6';
 
@@ -20,7 +20,7 @@ const ChatWindow = () => {
   const currentChatRoomId =receiverId?allroomId[receiverId]:allroomId[groupId]
   const currentRoomMessages = allMessages[currentChatRoomId] || [];
   const dispatch = useDispatch();
-  const currentUserId = localStorage.getItem("loginUserId");
+  const currentUserId = localStorage.getItem("loginUserId")
 
 
   useEffect(() => {
@@ -28,6 +28,8 @@ const ChatWindow = () => {
     connectToStomp(() => {
       if (currentChatRoomId) {
         subscribeToRoom(currentChatRoomId, (recievedMsg) => {
+          console.log(recievedMsg)
+          dispatch(setMessageSender(recievedMsg.senderId))
           dispatch(appendMessage({ roomId: currentChatRoomId, message: recievedMsg }));
         });
       }
@@ -66,8 +68,8 @@ const ChatWindow = () => {
               <li className={item.senderId == currentUserId ? 'flex justify-end mb-3' : 'mb-3'} key={index}>
                 {
                   item.senderId == currentUserId ?
-                    <SendMessage username={item.senderName} message={item.content} />
-                    : <RecieveMessage username={item.senderName} message={item.content} />
+                    <SendMessage sentAt={item.sentAt} username={item.senderName} message={item.content} />
+                    : <RecieveMessage sentAt={item.sentAt} username={item.senderName} message={item.content} />
                 }
               </li> : null
           )
@@ -75,17 +77,13 @@ const ChatWindow = () => {
         }
 
       </div>
-      <div className=' text-center h-15  mb-1 rounded-2xl flex  items-center'>
+      <div className=' text-center h-15  mb-1 rounded-2xl flex justify-center  items-center'>
 
-        <div className='w-10 flex justify-center h-full items-center '>
-          <MdAttachFile size={30} className='bg-gray-600 rounded-3xl p-1 cursor-pointer hover:scale-110' />
-        </div>
+        
         <div className='w-full h-10 rounded-2xl '>
-
           <input placeholder='type message here...' className='text-cyan-100 bg-gray-700 text-sx font-mono placeholder-gray-400 outline-none  rounded-2xl w-full h-full' value={inputData} onChange={(e) => setInputData(e.target.value)} type='text' name='sendbox'></input>
         </div>
         <div className='flex w-30 justify-start ml-1 gap-2 '>
-          <button className='bg-gray-600 rounded-3xl p-2 cursor-pointer hover:scale-110'><FaMicrophone size={20} /></button>
           <button onClick={() => handleOnClickSend()} className='p-2  bg-gray-600 rounded-3xl cursor-pointer hover:scale-110 text-white '><MdSend size={25} /></button>
 
         </div>
