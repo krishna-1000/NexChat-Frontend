@@ -40,7 +40,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
 
             </header>
-            <div className='bg-gray-800 h-8 flex justify-center items-center ml-3  rounded-2xl '>
+            <div className='bg-gray-800 h-8 flex justify-center items-center ml-3  rounded-md '>
                 <input placeholder='search name here....' className='text-cyan-100 text-sx font-mono placeholder-gray-600 outline-none bg-transparent rounded-sm w-full h-full' type='text' name='searchbar' value={searchName} onChange={(e) => setSearchName(e.target.value)}></input>
                 <div className='bg-transparent rounded-2xl'>
                     <CiSearch size={30} />
@@ -95,7 +95,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                 </div>
 
             </main>
-            <footer className=' flex-1 flex items-center bg-gray-950 rounded-2xl mr-3 ml-3'>
+            <footer className=' bg-gray-800 h-15 flex items-center rounded-2xl mr-3 ml-3'>
                 <div onClick={() => {
                     dispatch(setIsModalOpen(true))
                     dispatch(setType("Profile"))
@@ -104,15 +104,16 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                     <Avatar username={loginUserName}/>
                     <div className=' rounded-2xl  w-full cursor-pointer flex justify-between '>
                         <div className='flex flex-col justify-center ml-2'>
-                            <div className='font-mono text-cyan-100'>{loginUserName}</div>
-                            <div className='text-sm  text-white'>{userEmail}</div>
+                            <div className='font-bold text-xl text-cyan-100'>You</div>
+                            <div className='text-sm text-wrap w-25 md:w-40 truncate text-white'>{userEmail}</div>
                         </div>
 
                     </div>
-                </div>
-                <div onClick={() => navigate("/logout")} className='hover:scale-110 hover:bg-gray-800 flex justify-center items-center mr-5'>
+                    <div onClick={() => navigate("/logout")} className='hover:scale-110 hover:bg-gray-800 flex justify-center items-center '>
                     <CiSettings size={20} color='white' />
                 </div>
+                </div>
+                
 
             </footer>
 

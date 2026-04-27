@@ -21,7 +21,6 @@ const VoiceCallModal = ({ muteVideo, muteVoice, hangUpCall, remoteStream, localS
     speaker: false
   });
   useEffect(() => {
-    console.debug("thisis remoteStream")
 
     if (remoteAudioRef.current && remoteStream)
       remoteAudioRef.current.srcObject = remoteStream;
@@ -37,7 +36,7 @@ const VoiceCallModal = ({ muteVideo, muteVoice, hangUpCall, remoteStream, localS
 
 
   return (
-    <div className='text-white relative  h-130 w-full md:w-100   ' >
+    <div className='text-white relative md:h-130 h-90   w-full md:w-100   ' >
       <div className='absolute top-4 left-10 -translate-x-1/2
                             bg-gray-900 bg-opacity-70 border border-cyan-900
                             px-4 py-1 rounded-full font-mono text-cyan-400 text-sm
@@ -47,8 +46,8 @@ const VoiceCallModal = ({ muteVideo, muteVoice, hangUpCall, remoteStream, localS
       <div className=' w-full h-full  flex justify-center  ' onClick={() => setIsVisible(!isVisible)}>
 
         <label className=' h-60 w-40 flex flex-col gap-0.5 justify-center items-center'>
-          <span className='font-bold font-mono text-4xl'>raj</span> <span className=' font-light'>voice chating....s</span></label>
-        <audio className='bg-red-400 w-30 h-30 text-white' controls ref={localAudioRef} muted autoPlay ></audio>
+          <span className='font-bold font-mono text-4xl'>raj</span>{remoteStream ? <span className=' font-light'>voice chating....</span> : "calling..."} </label>
+        <audio ref={localAudioRef} muted autoPlay ></audio>
         <audio ref={remoteAudioRef} autoPlay></audio>
 
       </div>

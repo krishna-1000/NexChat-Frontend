@@ -29,7 +29,7 @@ const UserBox = ({userEmail, id, username }) => {
                     
                 </div>
                 <div className=' text-black flex justify-between rounded-2xl '>
-                    <div className='text-sm ml-2 text-white'>{userEmail}</div>
+                    <div className='text-sm ml-2 w-25 md:w-40 truncate text-white'>{userEmail}</div>
                 </div>
             </div>
         </div>

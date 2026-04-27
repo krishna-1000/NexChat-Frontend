@@ -20,17 +20,15 @@ const IncomingCallModal = ({ callType, handleRejectCall, localStream, callerName
 
 
   return (
-    <div className='text-white relative  h-130 w-100 ' >
-      <div className=' w-full h-full ' >
-        <video className='w-full full object-cover' ref={localVideoRef} autoPlay playsInline muted />
-      </div>
-      <div className='  w-30 h-30  absolute top-30 left-35 '>
-        <h1 className='text-4xl font-extrabold text-white'>{
+    <div className='text-white flex flex-col h-130 w-full justify-between items-center' >
+      
+      <div className='  w-full h-30   '>
+        <h1 className='text-4xl font-extrabold w-full h-40 flex justify-start items-center  text-white'>{
           callerName ? callerName : "Unknown Call"
         }</h1>
       </div>
       <div>
-        <div className=' absolute bottom-0  w-full h-20 flex justify-evenly items-center'>
+        <div className='  w-full h-20 flex justify-between items-start'>
 
           <button onClick={() => onAccept(callType)} className='hover:scale-120  rounded-4xl flex justify-center items-center bg-green-500 w-15 h-15'>
             <FaPhone className='text-white' size={40} />

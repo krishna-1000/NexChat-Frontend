@@ -88,8 +88,8 @@ const ChatWindow = () => {
       <div className=' text-center h-15  mb-1 rounded-2xl flex justify-center  items-center'>
 
 
-        <div className='w-full h-10 rounded-2xl '>
-          <input  onKeyDown={handleKeyDown} placeholder='type message here...' className='text-cyan-100 bg-gray-700 text-sx font-mono placeholder-gray-400 outline-none  rounded-2xl w-full h-full' value={inputData} onChange={(e) => setInputData(e.target.value)} type='text' name='sendbox'></input>
+        <div className='w-full h-10 ml-4 rounded-2xl '>
+          <input  onKeyDown={handleKeyDown} placeholder='type message here...' className='text-cyan-100 bg-gray-700 text-sx font-mono placeholder-gray-400 outline-none  rounded-md pl-2 w-full h-full' value={inputData} onChange={(e) => setInputData(e.target.value)} type='text' name='sendbox'></input>
         </div>
         <div className='flex w-30 justify-start ml-1 gap-2 '>
           <button onClick={() =>

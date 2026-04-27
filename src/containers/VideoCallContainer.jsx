@@ -28,7 +28,7 @@ const VideoCallContainer = () => {
                     MissedCall(loginUser, selectedUserName, selectedChatroomId)
                 }
             }
-        }, 10000)
+        }, 30000)
         if ((type === "video-call" || type === "voice-call") && !localStream && !callInitiated.current) {
             console.log("-----------CALL START---------- ")
             dispatch(initiateCall(selectedUserName))
