@@ -32,7 +32,7 @@ function App() {
   useEffect(() => {
     const checkHealth = async () => {
       try {
-        await axios.get(import.meta.env.VITE_API_BASE_URL)
+        await axios.get('/actuator/health')
         dispatch(setMaintenanceMode(false))
       } catch (error) {
         if (!error.response) {
