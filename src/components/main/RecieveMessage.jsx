@@ -1,5 +1,6 @@
 import React from 'react'
 import { CiAlarmOn } from 'react-icons/ci';
+import Avatar from './Avatar';
 
 const RecieveMessage = ({selectedUser,sentAt,messageType, message, username }) => {
   if (!message) {
@@ -9,7 +10,7 @@ const RecieveMessage = ({selectedUser,sentAt,messageType, message, username }) =
     <>
       <div className='bg-gray-900  w-1/2 h-fit flex gap-2 justify-start'>
         <div className='w-12 h-12 rounded-4xl bg-cyan-400 flex justify-center items-center self-end'>
-          <CiAlarmOn />
+          <Avatar username={username}/>
         </div>
         <div className='text-white group flex-1 flex flex-col justify-start text-wrap self-start'>
 

@@ -20,7 +20,7 @@ const IncomingCallModal = ({ callType, handleRejectCall, localStream, callerName
 
 
   return (
-    <div className='text-white flex flex-col h-130 w-full justify-between items-center' >
+    <div className='text-white flex flex-col h-90 md:h-130 w-full md:w-100 justify-between items-center' >
       
       <div className='  w-full h-30   '>
         <h1 className='text-4xl font-extrabold w-full h-40 flex justify-start items-center  text-white'>{

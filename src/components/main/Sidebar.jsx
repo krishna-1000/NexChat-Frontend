@@ -31,7 +31,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     return (
         //outerMost 
         <div className={isSidebarOpen ? 'bg-gray-900 w-full text-white min-h-screen flex flex-col justify-center border-r border-cyan-900 rounded-md' : 'hidden'}>
-            <header className=' flex justify-between border-r border-cyan-900  h-15 bg-gray-900  pl-3 items-center'>
+            <header className=' flex  mb-10 justify-between border-r border-cyan-900  h-15 bg-gray-900  pl-3 items-center'>
                 <div className='flex gap-2 items-center justify-center font-extrabold'>
                     <FaRegMessage size={25} onClick={()=>navigate('/')} /> <span><span className='text-cyan-300 text-2xl'>Nex</span>Chat</span>
                 </div>
