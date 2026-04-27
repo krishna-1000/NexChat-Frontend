@@ -1,17 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 import React, { act } from 'react'
-import { setError, setLoading } from '../user/userSlice'
+import { createInitialState } from '../intialStateHelper'
 
-const initialState = {
+const initialState = createInitialState({
     selectedUserId: "",
     selectedUserName: "",
-    chatLoading: false,
     chatMessages: {},
     chatRoomsId: {},
-    chatError: null,
-    messageSender:{}
+    selectedChatroomId:""
 
-}
+})
 const chatSlice = createSlice({
     name: "chat",
     initialState: initialState,
@@ -39,25 +37,19 @@ const chatSlice = createSlice({
             const { userId, chatRoomId } = action.payload
             state.chatRoomsId[userId] = chatRoomId
         },
+        setselectedChatroomId: (state, action) => {
+            state.selectedChatroomId = action.payload
+        },
         setChatLoading: (state, action) => {
             state.loading = action.payload
         },
         setChatError: (state, action) => {
             state.error = action.payload
         },
-        setMessageSender: (state, action) => {
-            const senderId  = action.payload
 
-            if(!state.messageSender[senderId]){
-                state.messageSender[senderId] = 0;
-            }
-
-            state.messageSender[senderId]++;
-            
-        },
     }
 })
 
-export const {setMessageSender, setSelectedUserName, setChatLoading, appendMessage, setChatError, setSelectedUserId, setChatMessages, setChatRoomsId } = chatSlice.actions
+export const {setselectedChatroomId, setSelectedUserName, setChatLoading, appendMessage, setChatError, setSelectedUserId, setChatMessages, setChatRoomsId } = chatSlice.actions
 export default chatSlice.reducer;
 

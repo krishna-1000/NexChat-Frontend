@@ -9,12 +9,15 @@ import { GiCrossMark } from 'react-icons/gi';
 import useVideoCall from '../hooks/useVideoCall';
 import Profile from './Profile';
 import GroupProfile from './GroupProfile';
+import handleRejectCall from '../containers/VideoCallContainer'
+
 const Modal = () => {
     const { isModalOpen, type } = useSelector((state) => state.modal);
-    const {callData} = useSelector((state)=>state.call.callData);
+    const { callData ,remoteUser} = useSelector((state) => state.call.callData);
     const dispatch = useDispatch();
-    const loginUser = useSelector((state)=>state.profile.loginUserName);
+    const loginUser = useSelector((state) => state.profile.loginUserName);
     const { declineCall, HangUpCall } = useVideoCall();
+
 
     if (!isModalOpen || !type) return null;
 
@@ -37,12 +40,13 @@ const Modal = () => {
         }
     }
 
-    const handleOnCloseModal = () => {
+    const handleOnCloseModal = (loginUser, sender) => {
         if (type == "incoming-call") {
-            declineCall(loginUser, callData.sender)
+            declineCall(loginUser, sender)
+            dispatch(setIsModalOpen(false))
         }
         else if (type == "video-call") {
-            HangUpCall(loginUser, callData.sender)
+            HangUpCall(loginUser, sender)
             dispatch(setIsModalOpen(false))
         }
 
@@ -55,9 +59,9 @@ const Modal = () => {
             className="fixed inset-0 flex items-center justify-center 
                   backdrop-blur-sm p-4 animate-in fade-in duration-900"
             onClick={() => {
-                if (type != "video-call") {
-                    handleOnCloseModal()
-                }
+
+                handleOnCloseModal(loginUser, remoteUser)
+
             }}
         >
             <div onClick={(e) => e.stopPropagation()} className='p-2 shadow-2xl shadow-white z-999 rounded-2xl max-h-screen h-fit w-fit max-w-full bg-gray-900 text-white flex-col '>

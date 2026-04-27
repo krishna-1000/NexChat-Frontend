@@ -5,12 +5,15 @@ import { BsCameraVideo, BsCameraVideoOff, BsFillMicMuteFill } from "react-icons/
 import useVideoCall from '../../hooks/useVideoCall';
 import { FaMicrophone, FaPhoneSlash } from 'react-icons/fa6';
 import { FiMaximize, FiMinimize } from "react-icons/fi";
+import { acceptCall } from '../../features/call/callSlice';
+import useCallDuration from '../../hooks/useCallDuration';
 
 
 const VideoCallModal = ({ muteVideo, muteVoice, hangUpCall, remoteStream, localStream }) => {
   const localVideoRef = useRef(null);
   const remotelocalVideoRef = useRef(null);
   const fullScreenRef = useRef(null);
+  const { formatted } = useCallDuration()
   const [isVisible, setIsVisible] = useState(true);
   const [switchStream, setSwitchStream] = useState(false);
   const [callData, setCallData] = useState({
@@ -19,18 +22,37 @@ const VideoCallModal = ({ muteVideo, muteVoice, hangUpCall, remoteStream, localS
     fullScreen: false,
     speaker: false
   });
+
+
+
   useEffect(() => {
-    console.debug("thisis remoteStream")
+
 
     if (remotelocalVideoRef.current && remoteStream)
       remotelocalVideoRef.current.srcObject = remoteStream;
   }, [remoteStream])
+
 
   useEffect(() => {
     if (localVideoRef.current && localStream) {
       localVideoRef.current.srcObject = localStream;
     }
   }, [localStream]);
+
+  useEffect(() => {
+    const callingTime = setTimeout(() => {
+      if (acceptCall) {
+        clearTimeout();
+        return;
+      }
+      hangUpCall();
+
+    }, 10000);
+
+    return () => {
+      clearTimeout(callingTime);
+    }
+  }, [])
 
   const toggleFullScreen = () => {
 
@@ -48,7 +70,12 @@ const VideoCallModal = ({ muteVideo, muteVoice, hangUpCall, remoteStream, localS
   return (
     <div ref={fullScreenRef} className='text-white relative  h-130 w-full md:w-100  ' >
       <div className=' w-full h-full ' onClick={() => setIsVisible(!isVisible)}>
-
+        <div className='absolute top-4 left-10 -translate-x-1/2
+                            bg-gray-900 bg-opacity-70 border border-cyan-900
+                            px-4 py-1 rounded-full font-mono text-cyan-400 text-sm
+                            tracking-widest'>
+          {formatted}
+        </div>
         {
           switchStream ? <video className='w-full h-full object-cover' ref={localVideoRef} autoPlay playsInline muted />
             : <video className='w-full h-full object-cover ' ref={remotelocalVideoRef} autoPlay />

@@ -2,8 +2,9 @@ import { useState } from "react";
 import { FiUser, FiLock, FiEye, FiEyeOff, FiAlertCircle } from "react-icons/fi";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { Navigate, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const LoginForm = ({error2,onSubmit }) => {
+const LoginForm = ({ error2, onSubmit }) => {
 
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [focused, setFocused] = useState("");
@@ -14,11 +15,11 @@ const LoginForm = ({error2,onSubmit }) => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (error) setError(""); // clear error as soon as user starts typing again
+    if (error) setError("");
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
     if (!formData.username.trim() || !formData.password.trim()) {
       setError("Please fill in all fields.");
@@ -29,47 +30,45 @@ const LoginForm = ({error2,onSubmit }) => {
     setError("");
 
     try {
-     const res =  await onSubmit?.(formData);
-     console.log(res)
-     if(res == undefined){
-      setError("Please enter valid values!")
-     }
+      const res = await onSubmit?.(formData);
+      toast.success("Login successfully!")
 
     } catch (err) {
-      setError(err?.message || "Invalid credentials. Try again.");
+      const erroMessage = err?.message;
+      if (err?.status == 401) {
+        setError("Invalid credentials. Try again.")
+      }
+      else {
+        setError(err?.message || "Invalid credentials. Try again.");
+
+      }
     } finally {
-      setIsLoading(false); // always runs whether success or error
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
 
-      {/* ── Card ── */}
       <div className="w-full max-w-md bg-gray-900 border border-cyan-900 rounded-2xl p-8">
 
-        {/* ── Header ── */}
         <div className="flex flex-col items-center mb-8">
 
-          {/* Logo circle with React Icon inside */}
           <div className="w-16 h-16 rounded-full bg-cyan-950 border-2 border-cyan-500
                           flex items-center justify-center mb-4">
             <IoChatbubbleEllipsesOutline size={30} className="text-cyan-400" />
           </div>
 
-          {/* App name */}
           <h1 className="text-3xl font-bold tracking-widest text-white uppercase">
             Nex<span className="text-cyan-400">Chat</span>
           </h1>
 
-          {/* Tagline */}
           <p className="text-xs text-cyan-800 mt-1 tracking-widest font-mono uppercase">
             welcome back
           </p>
 
         </div>
 
-        {/* ── Error box — only shows when error state has text ── */}
         {error && (
           <div className="flex items-center gap-3 bg-red-950 border border-red-800
                           rounded-xl px-4 py-3 mb-6">
@@ -78,20 +77,16 @@ const LoginForm = ({error2,onSubmit }) => {
           </div>
         )}
 
-        {/* ── Form ── */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
 
-          {/* Username field */}
           <div className="flex flex-col gap-2">
 
             <label className="text-xs text-cyan-700 tracking-widest font-mono uppercase">
               username
             </label>
 
-            {/* Input wrapper — relative so icon can be positioned inside */}
             <div className="relative">
 
-              {/* Left icon — changes color when field is focused */}
               <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                 <FiUser
                   size={17}
@@ -120,7 +115,6 @@ const LoginForm = ({error2,onSubmit }) => {
             </div>
           </div>
 
-          {/* Password field */}
           <div className="flex flex-col gap-2">
 
             <label className="text-xs text-cyan-700 tracking-widest font-mono uppercase">
@@ -129,7 +123,6 @@ const LoginForm = ({error2,onSubmit }) => {
 
             <div className="relative">
 
-              {/* Left icon */}
               <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                 <FiLock
                   size={17}
@@ -156,7 +149,6 @@ const LoginForm = ({error2,onSubmit }) => {
                   }`}
               />
 
-              {/* Show / hide password toggle — right side of input */}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -165,15 +157,14 @@ const LoginForm = ({error2,onSubmit }) => {
                            text-gray-500 hover:text-cyan-400 transition-colors duration-200"
               >
                 {showPassword
-                  ? <FiEyeOff size={17} />   // password is visible — show crossed eye
-                  : <FiEye size={17} />       // password is hidden  — show normal eye
+                  ? <FiEyeOff size={17} />
+                  : <FiEye size={17} />
                 }
               </button>
 
             </div>
           </div>
 
-          {/* Forgot password link */}
           <div className="flex justify-end -mt-2">
             <button
               type="button"
@@ -184,7 +175,6 @@ const LoginForm = ({error2,onSubmit }) => {
             </button>
           </div>
 
-          {/* Submit button */}
           <button
             type="submit"
             disabled={isLoading}
@@ -196,23 +186,8 @@ const LoginForm = ({error2,onSubmit }) => {
           >
             {isLoading ? (
 
-              // Loading state — spinner + text
               <span className="flex items-center justify-center gap-2">
-                <svg
-                  className="animate-spin w-4 h-4 text-cyan-300"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <circle
-                    cx="12" cy="12" r="10"
-                    stroke="currentColor" strokeWidth="4"
-                    className="opacity-25"
-                  />
-                  <path
-                    fill="currentColor" className="opacity-75"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                  />
-                </svg>
+
                 <span className="font-mono text-sm text-cyan-300">
                   authenticating...
                 </span>
@@ -225,19 +200,17 @@ const LoginForm = ({error2,onSubmit }) => {
 
         </form>
 
-        {/* ── Divider ── */}
         <div className="flex items-center gap-3 my-6">
           <div className="flex-1 h-px bg-gray-800" />
           <span className="text-xs text-gray-600 font-mono tracking-widest">or</span>
           <div className="flex-1 h-px bg-gray-800" />
         </div>
 
-        {/* ── Register link ── */}
         <p className="text-center text-sm text-gray-500">
           No account?{" "}
           <button
             type="button"
-            onClick={()=>navigate("/signup")}
+            onClick={() => navigate("/signup")}
             className="text-cyan-400 font-semibold hover:text-cyan-300
                        transition-colors duration-200
                        underline underline-offset-4"

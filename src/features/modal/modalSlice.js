@@ -1,17 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { createInitialState } from "../intialStateHelper";
 
-const initialState = {
+const initialState = createInitialState({
     isModalOpen: false,
     type: null,
     data: []
 
-}
+})
 const modalSlice = createSlice({
     name: 'modal',
     initialState: initialState,
     reducers: {
         setIsModalOpen: (state, action) => {
             state.isModalOpen = action.payload
+        },
+        clearModal: (state, action) => {
+            state.isModalOpen = false
+            state.type = null
+            state.data = []
         },
         setType: (state, action) => {
             state.type = action.payload
@@ -22,8 +28,14 @@ const modalSlice = createSlice({
             state.data = action.payload
             console.log("warning AGIM.... ")
             console.warn(state.data)
-        }
+        },
+        setModalError: (state, action) => {
+            state.error = action.payload
+        },
+        setModalLoading: (state, action) => {
+            state.loading = action.payload
+        },
     }
 })
-export const { setIsModalOpen,setData,setType } = modalSlice.actions
+export const {clearModal, setModalError, setModalLoading, setIsModalOpen, setData, setType } = modalSlice.actions
 export default modalSlice.reducer

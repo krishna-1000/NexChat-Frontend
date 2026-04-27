@@ -15,13 +15,13 @@ const LoginPage = () => {
             if (res.status == 200) {
                 localStorage.setItem("token", res.data.token);
                 localStorage.setItem("loginUserId", res.data.id);
-                localStorage.setItem("loginUserName", res.data.username);
                 localStorage.setItem("userBio", res.data.bio);
+                localStorage.setItem("loginUserName", res.data.username);
                 localStorage.setItem("userEmail", res.data.email);
                 localStorage.setItem("UserMemberSince", res.data.createdAt);
-                
-                
-               
+
+
+
                 dispatch(setProfileData({
                     loginUserName: res.data.username,
                     loginUserId: res.data.id,
@@ -35,8 +35,8 @@ const LoginPage = () => {
             }
             return res;
         } catch (error) {
-
-            console.error(error)
+            console.warn(error)
+            throw error;
         }
 
     }

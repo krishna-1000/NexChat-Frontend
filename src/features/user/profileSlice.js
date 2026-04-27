@@ -7,9 +7,6 @@ const initialState = {
     token: "",
     userEmail: "",
     UserMemberSince: "",
-
-
-
 }
 const profileSlice = createSlice(
     {

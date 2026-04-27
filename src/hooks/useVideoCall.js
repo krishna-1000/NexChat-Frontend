@@ -1,13 +1,16 @@
-import { useDispatch } from "react-redux";
-import { EndCall, getLocalVideoRef, onCallEnded, onRemoteStreamRedy, ReceiveCall, rejectCall, SendCall } from "../service/VoiceChatService/videoCallService";
-import { initiateCall, receiveCall } from "../features/call/callSlice";
-import { useEffect, useState } from "react";
+import { useDispatch, useSelector, useStore } from "react-redux";
+import { EndCall, getLocalVideoRef, missCall, onCallEnded, onRemoteStreamRedy, ReceiveCall, rejectCall, SendCall } from "../service/CallService";
+import { endCall, initiateCall, receiveCall, setCallError } from "../features/call/callSlice";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { setIsModalOpen } from "../features/modal/modalSlice";
+import { toast } from "react-toastify";
 
 const useVideoCall = () => {
+
     const [localStream, setLocalStream] = useState(getLocalVideoRef())
     const [remoteStream, setRemoteStream] = useState(null);
     const dispatch = useDispatch()
+   
 
     useEffect(() => {
         const unsubscribe = onRemoteStreamRedy((stream) => {
@@ -31,57 +34,61 @@ const useVideoCall = () => {
         }
     }, [])
 
-    const StartVideoCall = async (senderName, targetUser,callType) => {
+    const StartVideoCall = async (senderName, targetUser, callType) => {
 
         try {
 
-            const localStream = await SendCall(senderName, targetUser,callType);
+            const localStream = await SendCall(senderName, targetUser, callType);
+        
             if (localStream) {
-                console.log("Stream received in hook:", localStream);
                 setLocalStream(localStream);
-                dispatch(initiateCall(targetUser));
-                 // This triggers the re-render for your Modal
             }
         } catch (error) {
-            console.log(error.message)
+            setCallError(error)
+            dispatch(endCall());
+            throw error
         }
     }
 
-    const ReceiveVideoCall = async (signal) => {
+    const ReceiveVideoCall = useCallback(async (signal) => {
         try {
-            console.log("receiving ...... in useVideoCall")
+            
+            const { type = "no Type", data, sender, targetUser, callType } = signal;
 
-            const localStream = await ReceiveCall(signal)
-
+            const localStream = await ReceiveCall(type, data, sender, targetUser, callType)
+            
             if (localStream) {
+
                 setLocalStream(localStream);
+                dispatch(receiveCall(signal.sender))
             }
 
         } catch (error) {
-            console.log(error.message)
+            throw error
         }
-    }
+    },[dispatch])
+
+
     const HangUpCall = (senderName, targetUser) => {
-        console.log("STREAM IN HANG UP CALL")
-        console.log(localStream)
-        console.log(remoteStream)
-        EndCall(senderName, targetUser);
 
+        const res = EndCall(senderName, targetUser);
+        toast.success(res);
         setLocalStream(null)
         setRemoteStream(null)
         dispatch(setIsModalOpen(false))
+        dispatch(endCall());
 
     }
-    const declineCall = (senderName, targetUser) => {
 
-        rejectCall(senderName, targetUser);
-
+    const declineCall = (loginUser,remoteUser)=>{
+         rejectCall(loginUser, remoteUser);
         dispatch(setIsModalOpen(false))
-
     }
 
 
-    return { StartVideoCall, HangUpCall, declineCall,remoteStream, localStream, ReceiveVideoCall };
+
+
+    return {declineCall, StartVideoCall, HangUpCall, remoteStream, localStream, ReceiveVideoCall };
 }
 
 export default useVideoCall;

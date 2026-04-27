@@ -5,11 +5,14 @@ import { BsCameraVideo, BsCameraVideoOff, BsFillMicMuteFill } from "react-icons/
 import useVideoCall from '../../hooks/useVideoCall';
 import { FaMicrophone, FaPhoneSlash } from 'react-icons/fa6';
 import { FiMaximize, FiMinimize } from "react-icons/fi";
+import useCallDuration from '../../hooks/useCallDuration';
 
 
 const VoiceCallModal = ({ muteVideo, muteVoice, hangUpCall, remoteStream, localStream }) => {
   const localAudioRef = useRef(null);
   const remoteAudioRef = useRef(null);
+  const { formatted } = useCallDuration()
+
   const [isVisible, setIsVisible] = useState(true);
   const [callData, setCallData] = useState({
     voiceMute: false,
@@ -34,16 +37,22 @@ const VoiceCallModal = ({ muteVideo, muteVoice, hangUpCall, remoteStream, localS
 
 
   return (
-    <div className='text-white relative  h-130 w-full md:w-100  ' >
+    <div className='text-white relative  h-130 w-full md:w-100   ' >
+      <div className='absolute top-4 left-10 -translate-x-1/2
+                            bg-gray-900 bg-opacity-70 border border-cyan-900
+                            px-4 py-1 rounded-full font-mono text-cyan-400 text-sm
+                            tracking-widest'>
+        {formatted}
+      </div>
       <div className=' w-full h-full  flex justify-center  ' onClick={() => setIsVisible(!isVisible)}>
 
-        <label className=' h-60 w-full flex flex-col gap-0.5 justify-center items-center'>
-          <span className='font-bold font-mono text-4xl'>raj</span> <span className=' font-light'>calling....</span></label>
-          <audio ref={localAudioRef} muted autoPlay ></audio>
-          <audio ref={remoteAudioRef} autoPlay></audio>
+        <label className=' h-60 w-40 flex flex-col gap-0.5 justify-center items-center'>
+          <span className='font-bold font-mono text-4xl'>raj</span> <span className=' font-light'>voice chating....s</span></label>
+        <audio className='bg-red-400 w-30 h-30 text-white' controls ref={localAudioRef} muted autoPlay ></audio>
+        <audio ref={remoteAudioRef} autoPlay></audio>
 
       </div>
-    
+
       <div className={isVisible == true ? 'visible' : 'hidden'}>
         <div className=' absolute bottom-0  w-full h-20  flex  justify-evenly items-center'>
           <button onClick={() => {
@@ -54,7 +63,7 @@ const VoiceCallModal = ({ muteVideo, muteVoice, hangUpCall, remoteStream, localS
               callData.voiceMute ? <BsFillMicMuteFill size={25} /> : <FaMicrophone size={25} />
             }
           </button>
-    
+
           <button onClick={() => hangUpCall()} className='hover:scale-120  rounded-4xl flex justify-center items-center bg-red-500 w-15 h-15'>
             <FaPhoneSlash className='text-white' size={40} />
           </button>
@@ -62,13 +71,13 @@ const VoiceCallModal = ({ muteVideo, muteVoice, hangUpCall, remoteStream, localS
 
             setCallData(prev => ({ ...prev, speaker: !callData.speaker }))
 
-          }} className='hover:scale-120 hover:bg-gray-800 bg-gray-950 rounded-4xl p-1'>
+          }} className='hover:scale-120  hover:bg-gray-800 bg-gray-950 rounded-4xl p-1'>
 
             {
               callData.speaker ? <GiSpeakerOff size={25} /> : <GiSpeaker size={25} />
             }
           </button>
-        
+
 
         </div>
       </div>

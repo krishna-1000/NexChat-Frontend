@@ -8,6 +8,7 @@ import { IoIosVideocam, IoMdExit } from 'react-icons/io';
 import { CiAlarmOn } from 'react-icons/ci';
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { setIsModalOpen, setType } from '../../features/modal/modalSlice';
+import { toast } from 'react-toastify';
 
 
 const GroupNavbar = () => {
@@ -23,28 +24,37 @@ const GroupNavbar = () => {
     useEffect(() => {
         console.log(currentLoginUserName, admin)
     }, [])
-    const handleOnDeleteGroup = () => {
-        
-        const res = deleteGroup(currentGroupId);
-        const data = res.then(r => alert(r.data));
-        const newGroups = groups.filter((group) => group.groupId != currentGroupId)
-        dispatch(setGroup(newGroups));
-        dispatch(setSelectedGroup(""))
-    }   
+    const handleOnDeleteGroup = async () => {
+        try {
+            const res = await deleteGroup(currentGroupId);
+            const newGroups = groups.filter((group) => group.groupId != currentGroupId)
+            dispatch(setGroup(newGroups));
+            dispatch(setSelectedGroup(""))
+            toast.success("group deleted")
+        } catch (error) {
+            toast.error(error)
+        }
 
-    const handleOnExitFromGroup = () => {
-        const res = exitFromGroup(currentLoginUserId, currentGroupId);
-        const data = res.then(r => alert(r.data));
-        const newGroups = groups.filter((group) => group.groupId != currentGroupId)
-        dispatch(setGroup(newGroups));
-        dispatch(setSelectedGroup(""))
+    }
+
+    const handleOnExitFromGroup = async () => {
+        try {
+            const res = await exitFromGroup(currentLoginUserId, currentGroupId);
+            const newGroups = groups.filter((group) => group.groupId != currentGroupId)
+            dispatch(setGroup(newGroups));
+            dispatch(setSelectedGroup(""))
+            toast.success("exit successfully")
+        } catch (error) {
+            toast.error(error)
+        }
+
 
     }
     return (
         <div className='flex w-full justify-between h-15 bg-gray-900 text-white'>
             <div className='flex gap-2 min-h-full items-center w-45 '>
                 <div className='flex justify-center items-center bg-cyan-700 rounded-2xl h-13 w-13'>
-                    <CiAlarmOn onClick={()=>{
+                    <CiAlarmOn onClick={() => {
                         dispatch(setType("GroupProfile"))
                         dispatch(setIsModalOpen(true))
                     }} size={40} />
@@ -65,9 +75,9 @@ const GroupNavbar = () => {
                         if (ans) {
                             handleOnExitFromGroup()
                         }
-                    }}  color='red' size={25} />
+                    }} color='red' size={25} />
                 }
-                
+
 
             </div>
         </div>

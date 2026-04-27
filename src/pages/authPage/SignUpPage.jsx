@@ -1,7 +1,8 @@
 import React from 'react'
 import SignUpForm from '../../components/auth/SignUpForm'
-import {signUpApi} from '../../api/auth/signUpApi'
+import {sendOtpApi, signUpApi} from '../../api/auth/signUpApi'
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const SingUpPage = () => {
     const navigate = useNavigate();
@@ -10,15 +11,16 @@ const SingUpPage = () => {
         try {
             const response = await signUpApi(data);
             navigate("/login")
-            return response
+            toast.success("Signup successfully");
+           
         } catch (error) {
-            console.log(error.message)
-             throw new Error(error.response?.data|| "Signup failed");
+            throw error
         }
     }
+   
     return (
         
-            <SignUpForm onSubmitHandler={handleSignup} />
+            <SignUpForm  onSubmitHandler={handleSignup} />
     )
 }
 

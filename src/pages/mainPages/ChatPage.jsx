@@ -9,6 +9,8 @@ import SocketEventListener from '../../components/main/websocket/SocketEventList
 import GroupNavbar from '../../components/main/GroupNavbar'
 import { FaSpinner } from 'react-icons/fa6'
 import { MdMenu } from 'react-icons/md'
+import { toast } from 'react-toastify'
+import SoundListener from '../../components/main/websocket/SoundListener'
 
 const ChatPage = () => {
   const { users, loading, error } = useSelector((state) => state.user);
@@ -18,23 +20,33 @@ const ChatPage = () => {
   const { getUsers, getGroups } = useUser();
   const loginUserId = localStorage.getItem("loginUserId")
   useEffect(() => {
-    getUsers();
+    const fetchUsers = async () => {
+      try {
+        await getUsers();
+        // toast.success("all users fetched")
+      } catch (error) {
+        toast.error("error in fetching users" + error)
+      }
+    }
+    const fetchGroups = async (loginUserId) => {
+      try {
+        await getGroups(loginUserId);
+        // toast.success("all Groups fetched")
+      } catch (error) {
+        toast.error("error in fetching groups" + error)
+      }
+    }
 
-    getGroups(loginUserId);
+    fetchUsers();
+    fetchGroups(loginUserId);
 
   }, [])
 
 
-
-  // if (error) {
-  //   console.log(error)
-  //   return (<div>{error}</div>)
-  // }
-
   return (
     <div className='bg-gray-900 flex justify-start items-start w-full h-screen overflow-hidden'>
       <SocketEventListener />
-
+      <SoundListener/>
 
       <div className={`
         ${(isSidebarOpen) ? 'block  ' : 'hidden'} 
@@ -60,9 +72,9 @@ const ChatPage = () => {
         </div>
       ) : (
 
-        
+
         <div className='flex text-white justify-start items-start h-full flex-1 font-extralight text-2xl'>
-          <div className={isSidebarOpen?'hidden':'flex'} onClick={()=>setIsSidebarOpen(true)}><MdMenu size={30} color='white'/></div>
+          <div className={isSidebarOpen ? 'hidden' : 'flex'} onClick={() => setIsSidebarOpen(true)}><MdMenu size={30} color='white' /></div>
           Select a user to chat
         </div>
       )}

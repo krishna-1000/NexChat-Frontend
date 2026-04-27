@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { createGroupApi } from '../api/user/createGroupApi';
 import { useDispatch, useSelector } from 'react-redux'
 import { appendGroup, setGroup, setGroupId, setGroupName } from '../features/chat/groupSlice';
 import { FaUserMinus, FaUserPlus } from 'react-icons/fa6';
 import { setIsModalOpen } from '../features/modal/modalSlice';
+import useUser from '../hooks/useUser';
+import { toast } from 'react-toastify';
 
 const CreateGroupModal = () => {
   const [inputData, setInputData] = useState("");
@@ -12,9 +13,10 @@ const CreateGroupModal = () => {
   const loginUserId = localStorage.getItem("loginUserId")
   const { users } = useSelector((state) => state.user);
   const adminName = localStorage.getItem("loginUserName")
+  const { createGroup } = useUser();
+  const {loading} = useSelector((state)=>state.group.loading);
 
   const handleOnCreateGroup = async () => {
-    alert(adminName);
     if (!inputData || !adminName) {
       return;
     }
@@ -23,14 +25,13 @@ const CreateGroupModal = () => {
       adminName: adminName,
       members: members
     }
-    const data = await createGroupApi(formData)
-    console.log(data)
-    if (data) {
-      dispatch(setGroupName(data.groupName))
-      dispatch(setGroupId(data.groupId))
-      dispatch(appendGroup(data))
+    try {
+      await createGroup(formData);
+      toast.success("group created with name "+inputData)
+    } catch (error) {
+      toast.error(error)
     }
-    dispatch(setIsModalOpen(false))
+
   }
 
   const handleOnAddMember = (memberName) => {
@@ -78,7 +79,10 @@ const CreateGroupModal = () => {
       </div>
 
       <div className=' text-center mb-1'>
-        <button className='bg-green-500 self-center rounded-md pl-2 pr-2' onClick={() => handleOnCreateGroup()}>Create</button>
+        <button className={`${!loading?'bg-gray-400':'bg-green-500'} self-center rounded-md pl-2 pr-2`} onClick={() => handleOnCreateGroup()}>
+          {loading?'Creating....':'Creat'
+          }
+          </button>
       </div>
 
     </div>

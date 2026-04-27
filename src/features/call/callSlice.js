@@ -1,14 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { createInitialState } from "../intialStateHelper";
+import { toast } from "react-toastify";
 
 
-const initialState = {
+const initialState = createInitialState({
     isCallActive: false,
-    callStatus: 'idle', // 'idle', 'ringing', 'calling', 'connected'
+    callStatus: 'idle',
     remoteUser: null,
     isMuted: false,
     isVideoOff: false,
     callData: []
-}
+})
 
 const callSlice = createSlice({
     name: 'call',
@@ -28,20 +30,24 @@ const callSlice = createSlice({
             state.callStatus = 'connected';
         },
         endCall: (state) => {
-            return initialState; // Reset everything
+            return initialState;
         },
         toggleAudio: (state) => {
             state.isMuted = !state.isMuted;
         },
         setCallData: (state, action) => {
-            console.log("warning of setting datat ")
             console.warn(action.payload)
             state.callData = action.payload
-            console.log("warning AGIM.... ")
             console.warn(state.callData)
-        }
+        },
+        setCallLoading: (state, action) => {
+            state.loading = action.payload
+        },
+        setCallError: (state, action) => {
+            state.error = action.payload
+        },
     }
 });
 
-export const { initiateCall,setCallData, receiveCall, acceptCall, endCall, toggleAudio } = callSlice.actions;
+export const { setCallError, setCallLoading, initiateCall, setCallData, receiveCall, acceptCall, endCall, toggleAudio } = callSlice.actions;
 export default callSlice.reducer;

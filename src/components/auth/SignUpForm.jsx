@@ -1,283 +1,118 @@
-
-import React, { useState } from 'react'
-import { FiUser, FiLock, FiEye, FiEyeOff, FiAlertCircle } from "react-icons/fi";
-import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
-import { MdEmail, MdOutlineEmail } from "react-icons/md";
-import { Navigate, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaRegMessage } from 'react-icons/fa6';
+import { FiUser, FiLock, FiEye, FiEyeOff, FiAlertCircle, FiCheckCircle } from "react-icons/fi";
+import { MdEmail } from "react-icons/md";
+import { useSignup } from '../../hooks/useSignUp';
+import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
 
 const SignUpForm = ({ onSubmitHandler }) => {
-
-    const [formData, setFormData] = useState({ username: "", password: "", email: "" });
-    const [focused, setFocused] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState("");
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = React.useState(false);
+    const { formData, status, setStatus, timers, error, handleChange, handleSendOtp, handleVerifyOtp, handleFinalSubmit } = useSignup(onSubmitHandler);
 
-    const handleChange = (e) => {
+    const requirements = [
+        { label: "8+ characters", test: formData.password.length >= 8 },
+        { label: "Mixed Case", test: /[a-z]/.test(formData.password) && /[A-Z]/.test(formData.password) },
+        { label: "Numerical", test: /\d/.test(formData.password) },
+        { label: "Special Char", test: /[@$!%*?&]/.test(formData.password) },
+    ];
 
-        setFormData({ ...formData, [e.target.name]: e.target.value })
-        if (error) {
-            setError("")
-        }
-    }
-
-    const handleSubmit = async (e) => {
-        console.log("ero")
-        e.preventDefault();
-        if (!formData.username.trim() || !formData.email.trim() || !formData.password.trim()) {
-            setError("please fill in all fields");
-            return;
-        }
-
-        setIsLoading(true);
-        setError("");
-        try {
-            await onSubmitHandler(formData)
-
-        } catch (error) {
-            console.log(error);
-            setError(error.message)
-        }
-        finally {
-            setIsLoading(false)
-        }
-
-    }
+    const inputClass = (field) => `w-full font-mono text-sm text-cyan-100 placeholder-gray-600 bg-gray-800 rounded-xl px-10 py-3 border outline-none transition-all duration-200 ${status.focused === field ? "border-cyan-500 bg-gray-950 ring-1 ring-cyan-500" : "border-gray-700 hover:border-gray-600"}`;
 
     return (
         <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
-
-            {/* ── Card ── */}
-            <div className="w-full max-w-md bg-gray-900 border border-cyan-900 rounded-2xl p-8">
-
-                {/* ── Header ── */}
+            <div className="w-full max-w-md bg-gray-900 border border-cyan-900 rounded-2xl p-8 shadow-2xl">
                 <div className="flex flex-col items-center mb-8">
-
-                    {/* Logo circle with React Icon inside */}
-                    <div className="w-16 h-16 rounded-full bg-cyan-950 border-2 border-cyan-500
-                          flex items-center justify-center mb-4">
-                        <IoChatbubbleEllipsesOutline size={30} className="text-cyan-400" />
-                    </div>
-
-                    {/* App name */}
-                    <h1 className="text-3xl font-bold tracking-widest text-white uppercase">
-                        Nex<span className="text-cyan-400">Chat</span>
-                    </h1>
-
-                    {/* Tagline */}
-                    <p className="text-xs text-cyan-800 mt-1 tracking-widest font-mono uppercase">
-                        welcome back
-                    </p>
-
+                    <div className="w-16 h-16 rounded-full bg-cyan-950 border-2 border-cyan-500 flex items-center justify-center mb-4 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                        <IoChatbubbleEllipsesOutline size={30} className="text-cyan-400" />                    </div>
+                    <h1 className="text-3xl font-bold tracking-[0.2em] text-white">NEX<span className="text-cyan-400">CHAT</span></h1>
+                    <p className="text-[10px] text-cyan-700 mt-1 tracking-widest font-mono uppercase">Welcome to Nexchat</p>
                 </div>
 
-                {/* ── Error box — only shows when error state has text ── */}
                 {error && (
-                    <div className="flex items-center gap-3 bg-red-950 border border-red-800
-                          rounded-xl px-4 py-3 mb-6">
-                        <FiAlertCircle size={16} className="text-red-400 shrink-0" />
-                        <span className="text-red-400 text-sm">{error}</span>
+                    <div className="flex items-center gap-3 bg-red-950/50 border border-red-900/50 rounded-xl px-4 py-3 mb-6 animate-pulse">
+                        <FiAlertCircle size={16} className="text-red-500" />
+                        <span className="text-red-400 text-xs font-mono">{error}</span>
                     </div>
                 )}
 
-                {/* ── Form ── */}
-                <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-5">
-
-                    {/* Username field */}
-                    <div className="flex flex-col gap-2">
-
-                        <label className="text-xs text-cyan-700 tracking-widest font-mono uppercase">
-                            username
-                        </label>
-
-                        {/* Input wrapper — relative so icon can be positioned inside */}
+                <form onSubmit={handleFinalSubmit} className="space-y-5">
+                    <div className="space-y-1.5">
+                        <label className="text-[10px] text-cyan-600 tracking-widest font-mono uppercase ml-1">Username</label>
                         <div className="relative">
-
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                                <FiUser
-                                    size={17}
-                                    className={`transition-colors duration-200
-                                    ${focused === "username" ? "text-cyan-400" : "text-cyan-800"}`}
-                                />
-                            </div>
-
-                            <input
-                                type="text"
-                                name="username"
-                                value={formData.username}
-                                onChange={handleChange}
-                                onFocus={() => setFocused("username")}
-                                onBlur={() => setFocused("")}
-                                placeholder="enter your username"
-                                autoComplete="username"
-                                className={`w-full font-mono text-sm text-cyan-100 placeholder-gray-600
-                            bg-gray-800 rounded-xl pl-10 pr-4 py-3
-                            border outline-none transition-all duration-200
-                            ${focused === "username"
-                                        ? "border-cyan-500 bg-gray-950 ring-1 ring-cyan-500"
-                                        : "border-gray-700 hover:border-gray-600"
-                                    }`}
-                            />
+                            <FiUser className={`absolute left-3 top-1/2 -translate-y-1/2 ${status.focused === 'username' ? 'text-cyan-400' : 'text-cyan-800'}`} />
+                            <input name="username" value={formData.username} onChange={handleChange} onFocus={() => setStatus(s => ({ ...s, focused: "username" }))} onBlur={() => setStatus(s => ({ ...s, focused: "" }))} placeholder="USERNAME" className={inputClass("username")} />
                         </div>
-
-                    </div>
-                    <div className="flex flex-col gap-2">
-
-                        <label className="text-xs text-cyan-700 tracking-widest font-mono uppercase">
-                            email
-                        </label>
-
-
-                        <div className="relative">
-
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                                <MdEmail
-                                    size={17}
-                                    className={`transition-colors duration-200
-                                    ${focused === "email" ? "text-cyan-400" : "text-cyan-800"}`}
-                                />
-                            </div>
-
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                onFocus={() => setFocused("email")}
-                                onBlur={() => setFocused("")}
-                                placeholder="enter your email"
-                                autoComplete="email"
-                                className={`w-full font-mono text-sm text-cyan-100 placeholder-gray-600
-                            bg-gray-800 rounded-xl pl-10 pr-4 py-3
-                            border outline-none transition-all duration-200
-                            ${focused === "email"
-                                        ? "border-cyan-500 bg-gray-950 ring-1 ring-cyan-500"
-                                        : "border-gray-700 hover:border-gray-600"
-                                    }`}
-                            />
-                        </div>
-
                     </div>
 
-                    {/* Password field */}
-                    <div className="flex flex-col gap-2">
-
-                        <label className="text-xs text-cyan-700 tracking-widest font-mono uppercase">
-                            password
-                        </label>
-
+                    <div className="space-y-1.5">
+                        <label className="text-[10px] text-cyan-600 tracking-widest font-mono uppercase ml-1">Email</label>
                         <div className="relative">
-
-                            {/* Left icon */}
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                                <FiLock
-                                    size={17}
-                                    className={`transition-colors duration-200
-                    ${focused === "password" ? "text-cyan-400" : "text-cyan-800"}`}
-                                />
+                            <MdEmail className={`absolute left-3 top-1/2 -translate-y-1/2 ${status.focused === 'email' ? 'text-cyan-400' : 'text-cyan-800'}`} />
+                            <input name="email" type="email" value={formData.email} onChange={handleChange} onFocus={() => setStatus(s => ({ ...s, focused: "email" }))} onBlur={() => setStatus(s => ({ ...s, focused: "" }))} placeholder="EMAIL ADDRESS" className={inputClass("email")} />
+                        </div>
+                        {!status.verified ? (
+                            status.otpSent ? (
+                                <div className="flex gap-2 mt-2">
+                                    <input name="otp" value={formData.otp} onChange={handleChange} placeholder="6-DIGIT OTP" className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-4 py-2 text-sm font-mono text-cyan-400 outline-none focus:border-cyan-500" maxLength={6} />
+                                    <button onClick={handleVerifyOtp} disabled={timers.verify > 0} className="px-4 bg-cyan-600 hover:bg-cyan-500 disabled:bg-gray-700 text-gray-700 text-[10px] font-bold rounded-xl transition-all">
+                                        {timers.verify > 0 ? `WAIT ${timers.verify}s` : "VERIFY"}
+                                    </button>
+                                    <button onClick={handleSendOtp} disabled={timers.resend > 0} className="px-4 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 text-cyan-500 text-[10px] font-bold rounded-xl border border-gray-700">
+                                        {timers.resend > 0 ? timers.resend : "RESEND"}
+                                    </button>
+                                </div>
+                            ) : (
+                                <button onClick={handleSendOtp} className="text-[10px] text-cyan-400 hover:text-cyan-300 font-mono  mt-1 ml-1 transition-colors">
+                                    [ REQUEST VERIFICATION CODE ]
+                                </button>
+                            )
+                        ) : (
+                            <div className="flex items-center gap-1.5 text-[10px] text-green-500 font-mono mt-1 ml-1 uppercase">
+                                <FiCheckCircle /> Authentication Verified
                             </div>
+                        )}
+                    </div>
 
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                onFocus={() => setFocused("password")}
-                                onBlur={() => setFocused("")}
-                                placeholder="enter your password"
-                                autoComplete="current-password"
-                                className={`w-full font-mono text-sm text-cyan-100 placeholder-gray-600
-                            bg-gray-800 rounded-xl pl-10 pr-12 py-3
-                            border outline-none transition-all duration-200
-                            ${focused === "password"
-                                        ? "border-cyan-500 bg-gray-950 ring-1 ring-cyan-500"
-                                        : "border-gray-700 hover:border-gray-600"
-                                    }`}
-                            />
-
-                            {/* Show / hide password toggle — right side of input */}
-                            <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                tabIndex={-1}
-                                className="absolute right-3 top-1/2 -translate-y-1/2
-                           text-gray-500 hover:text-cyan-400 transition-colors duration-200"
-                            >
-                                {showPassword
-                                    ? <FiEyeOff size={17} />   // password is visible — show crossed eye
-                                    : <FiEye size={17} />       // password is hidden  — show normal eye
-                                }
+                    <div className="space-y-1.5">
+                        <label className="text-[10px] text-cyan-600 tracking-widest font-mono uppercase ml-1">Password</label>
+                        <div className="relative">
+                            <FiLock className={`absolute left-3 top-1/2 -translate-y-1/2 ${status.focused === 'password' ? 'text-cyan-400' : 'text-cyan-800'}`} />
+                            <input name="password" type={showPassword ? "text" : "password"} value={formData.password} onChange={handleChange} onFocus={() => setStatus(s => ({ ...s, focused: "password", showRequirements: true }))} onBlur={() => setStatus(s => ({ ...s, focused: "", showRequirements: false }))} placeholder="PASSWORD" className={inputClass("password")} />
+                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-800 hover:text-cyan-400">
+                                {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
                             </button>
                         </div>
+                        {status.showRequirements && (
+                            <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-2 p-3 bg-gray-800 rounded-xl border border-gray-800">
+                                {requirements.map((req, i) => (
+                                    <div key={i} className={`text-[9px] font-mono flex items-center gap-1.5 ${req.test ? 'text-cyan-400' : 'text-gray-300'}`}>
+                                        <div className={`w-1 h-1 rounded-full ${req.test ? 'bg-cyan-400 shadow-[0_0_5px_rgba(6,182,212,1)]' : 'bg-gray-300'}`} />
+                                        {req.label}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
-
-                    {/* Submit button */}
-                    <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-full bg-cyan-500 hover:bg-cyan-400
-                       disabled:bg-cyan-900 disabled:text-cyan-700 disabled:cursor-not-allowed
-                       text-gray-950 font-bold text-base tracking-widest uppercase
-                       rounded-xl py-3 transition-all duration-200
-                       hover:scale-[1.02] active:scale-[0.98]"
-                    >
-                        {isLoading ? (
-
-                            // Loading state — spinner + text
-                            <span className="flex items-center justify-center gap-2">
-                                <svg
-                                    className="animate-spin w-4 h-4 text-cyan-300"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                >
-                                    <circle
-                                        cx="12" cy="12" r="10"
-                                        stroke="currentColor" strokeWidth="4"
-                                        className="opacity-25"
-                                    />
-                                    <path
-                                        fill="currentColor" className="opacity-75"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                                    />
-                                </svg>
-                                <span className="font-mono text-sm text-cyan-300">
-                                    Signing....
-                                </span>
-                            </span>
-
-                        ) : (
-                            "Singup"
-                        )}
+                    <button type="submit" disabled={status.loading} className="w-full bg-cyan-500 hover:bg-cyan-400 disabled:bg-gray-800 disabled:text-gray-600 text-gray-950 font-bold py-3.5 rounded-xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] active:scale-95 uppercase tracking-widest text-sm mt-4">
+                        {status.loading ? "Processing..." : "Create Account"}
                     </button>
-
                 </form>
 
-                {/* ── Divider ── */}
-                <div className="flex items-center gap-3 my-6">
-                    <div className="flex-1 h-px bg-gray-800" />
-                    <span className="text-xs text-gray-600 font-mono tracking-widest">or</span>
-                    <div className="flex-1 h-px bg-gray-800" />
+                <div className="relative my-8">
+                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-800"></div></div>
+                    <div className="relative flex justify-center text-[10px] uppercase font-mono bg-gray-900 px-2 text-gray-400 tracking-[0.3em]">or</div>
                 </div>
 
-                {/* ── Register link ── */}
-                <p className="text-center text-sm text-gray-500">
-                    already have an account{" "}
-                    <button
-                    onClick={()=>navigate("/login")}
-                        type="button"
-                        className="text-cyan-400 font-semibold hover:text-cyan-300
-                       transition-colors duration-200
-                       underline underline-offset-4"
-                    >
-                        login
-                    </button>
+                <p className="text-center text-xs text-gray-500 font-mono">
+                    Already have an account{" "}
+                    <button onClick={() => navigate("/login")} className="text-cyan-500 hover:text-cyan-400 underline underline-offset-4 transition-colors">LOGIN</button>
                 </p>
-
             </div>
         </div>
     );
-}
+};
 
-export default SignUpForm
+export default SignUpForm;
