@@ -12,23 +12,16 @@ const LogoutPage = () => {
     const currentUserId = localStorage.getItem("loginUserId");
 
     const handleDeleteAccount = async () => {
-        // const res = await deleteAccount(currentUserId)
-        // if (res) {
-        //    // dispatch(deleteProfileData());
-        //     // stopConnection();
-        //     // localStorage.removeItem("token");
-        //     // console.log(res)
-        // }
-
-         navigate("/login")
+        navigate("/login")
     }
+   
     return (
 
-        <div>
-            <button onClick={() => navigate("/chat")}>back</button>
+        <div className='bg-gray-900'>
+            <button className='bg-green-400' onClick={() => navigate("/chat")}>back</button>
             <div className='bg-gray-900 h-screen w-screen flex flex-col min-h-screen justify-center gap-3 items-center'>
                 <button onClick={() => {
-                    localStorage.removeItem("token");
+                    localStorage.clear();
                     stopConnection();
                     dispatch(deleteProfileData());
                     navigate("/login")

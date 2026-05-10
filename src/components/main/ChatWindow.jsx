@@ -18,7 +18,7 @@ const ChatWindow = () => {
   const allMessages = useSelector((state) => state.chat.chatMessages);
   const allroomId = useSelector((state) => state.chat.chatRoomsId);
 
-  const currentChatRoomId = receiverId ? allroomId[receiverId] : allroomId[groupId]
+  const currentChatRoomId = receiverId ? allroomId?.[receiverId]?.chatRoomId : allroomId?.[groupId]?.chatRoomId
   const currentRoomMessages = allMessages[currentChatRoomId] || [];
   const dispatch = useDispatch();
   const currentUserId = localStorage.getItem("loginUserId")

@@ -23,15 +23,15 @@ const ChatPage = () => {
     const fetchUsers = async () => {
       try {
         await getUsers();
-        // toast.success("all users fetched")
       } catch (error) {
         toast.error("error in fetching users" + error)
       }
     }
     const fetchGroups = async (loginUserId) => {
       try {
-        await getGroups(loginUserId);
-        // toast.success("all Groups fetched")
+       const response =  await getGroups(loginUserId);
+       console.log(response)
+        
       } catch (error) {
         toast.error("error in fetching groups" + error)
       }

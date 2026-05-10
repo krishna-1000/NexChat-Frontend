@@ -8,7 +8,7 @@ import { setIsModalOpen, setType } from '../../features/modal/modalSlice';
 import Avatar from './Avatar';
 import { toast } from 'react-toastify';
 
-const GroupBox = ({ id, username }) => {
+const  GroupBox = ({ id, username }) => {
     const dispatch = useDispatch();
     const { getChatGroup } = useChat();
     const { groups } = useSelector((state) => state.group);

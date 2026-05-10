@@ -22,8 +22,12 @@ const groupSlice = createSlice({
 
         },
         setGroup: (state, action) => {
-            const { groupId } = action.payload
-            state.groups = action.payload
+            if (action.payload) {
+                action.payload.map((item, index) => {
+                    const {groupId} = item;
+                    state.groups[groupId] = item
+                })
+            }
         },
         appendGroup: (state, action) => {
             state.groups.push(action.payload);
@@ -47,5 +51,5 @@ const groupSlice = createSlice({
     }
 })
 
-export const {setGroupChatMessages, setGroupError, setGroupLoading, setGroupId, setGroupAdmin, appendGroup, setGroup, setGroupName, setSelectedGroup } = groupSlice.actions
+export const { setGroupChatMessages, setGroupError, setGroupLoading, setGroupId, setGroupAdmin, appendGroup, setGroup, setGroupName, setSelectedGroup } = groupSlice.actions
 export default groupSlice.reducer

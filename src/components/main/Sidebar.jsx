@@ -25,18 +25,18 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const navigate = useNavigate();
     const loginUserName = localStorage.getItem("loginUserName");
     const userEmail = localStorage.getItem("userEmail");
-    
+
 
 
     return (
         //outerMost 
         <div className={isSidebarOpen ? 'bg-gray-900 w-full text-white min-h-screen flex flex-col justify-center border-r border-cyan-900 rounded-md' : 'hidden'}>
-            <header className=' flex  mb-10 justify-between border-r border-cyan-900  h-15 bg-gray-900  pl-3 items-center'>
+            <header className=' flex justify-between border-r border-cyan-900  h-15 bg-gray-900  pl-3 items-center'>
                 <div className='flex gap-2 items-center justify-center font-extrabold'>
-                    <FaRegMessage size={25} onClick={()=>navigate('/')} /> <span><span className='text-cyan-300 text-2xl'>Nex</span>Chat</span>
+                    <FaRegMessage size={25} onClick={() => navigate('/')} /> <span><span className='text-cyan-300 text-2xl'>Nex</span>Chat</span>
                 </div>
 
-                <div onClick={() => setIsSidebarOpen(false)} className={isSidebarOpen ? 'visible mr-4 ' : 'hidden'}><GiCrossMark  size={25} color='white' /></div>
+                <div onClick={() => setIsSidebarOpen(false)} className={isSidebarOpen ? 'visible mr-4 ' : 'hidden'}><GiCrossMark size={25} color='white' /></div>
 
 
             </header>
@@ -82,7 +82,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                                     return null;
                                 }
                                 return (<div key={user.id}>
-                                    <UserBox userEmail = {user.email} id={user.id} username={user.username} />
+                                    <UserBox userEmail={user.email} id={user.id} username={user.username} />
                                 </div>)
                             }
 
@@ -90,7 +90,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                             )
                         }
 
-                        {(users.length<1) ? <div>No user available</div> : null}
+                        {(users.length < 1) ? <div>No user available</div> : null}
                     </div>
                 </div>
 
@@ -101,7 +101,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                     dispatch(setType("Profile"))
                 }} className='  w-full pr-2 flex justify-start items-center gap-1 h-15 rounded-2xl hover:bg-gray-800'>
 
-                    <Avatar username={loginUserName}/>
+                    <Avatar username={loginUserName} />
                     <div className=' rounded-2xl  w-full cursor-pointer flex justify-between '>
                         <div className='flex flex-col justify-center ml-2'>
                             <div className='font-bold text-xl text-cyan-100'>You</div>
@@ -109,11 +109,11 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         </div>
 
                     </div>
-                    <div onClick={() => navigate("/logout")} className='hover:scale-110 hover:bg-gray-800 flex justify-center items-center '>
+                </div>
+                <div onClick={() => navigate("/logout")} className='hover:scale-110 hover:bg-gray-800 flex justify-center items-center '>
                     <CiSettings size={20} color='white' />
                 </div>
-                </div>
-                
+
 
             </footer>
 

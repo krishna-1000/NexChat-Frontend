@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import { Client } from "@stomp/stompjs";
 import { toast } from 'react-toastify';
+import axiosInstance from '../api/axiosInstance';
 
 let stompClient = null;
 let connectionRetries = 0;
@@ -40,6 +41,24 @@ export const connectToStomp = (onConnectCallback) => {
         reconnectDelay: 5000,
         connectHeaders: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
+        },
+        beforeConnect: async () => {
+            try {
+                console.log("WS Pre-flight: Checking token status...");
+                await axiosInstance.get("/api/status"); 
+                
+                const freshToken = localStorage.getItem("token");
+                
+                stompClient.connectHeaders = {
+                    Authorization: `Bearer ${freshToken}`
+                };
+                
+                console.log("WS Pre-flight: Token fresh, connecting...");
+            } catch (error) {
+                console.error("WS Pre-flight: Could not refresh token", error);
+                stompClient.deactivate();
+                // window.location.href = '/login';
+            }
         },
         debug: (e) => {
             console.log(e)

@@ -41,7 +41,7 @@ export const useSignup = (onSubmitHandler) => {
             setError("");
         } catch (err) {
             console.warn(err)
-            setError(err || "Failed to send OTP");
+            setError("Email "+err || "Failed to send OTP");
         } finally {
             setStatus(prev => ({ ...prev, loading: false }));
         }

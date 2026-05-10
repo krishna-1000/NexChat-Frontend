@@ -30,10 +30,12 @@ const useUser = () => {
             dispatch(setGroupLoading(true))
 
             const response = await fetchGroupsApi(id);
-            const groupList = asArray(response.data);
 
+            const groupList = asArray(response.data);
+            console.log(groupList)
             dispatch(setGroup(groupList));
             dispatch(setGroupError(null))
+
         } catch (error) {
             dispatch(setGroupError(error))
             throw error
@@ -58,7 +60,7 @@ const useUser = () => {
         try {
             dispatch(setUserLoading(true))
             const res = await updateUserAPi(data)
-            
+
             localStorage.setItem("loginUserName", res.data.username);
             return res.data;
 
@@ -128,6 +130,6 @@ const useUser = () => {
 
     }
 
-    return {updateUser, getUsers, exitFromGroup, getGroups, deleteGroup, deleteAccount,createGroup };
+    return { updateUser, getUsers, exitFromGroup, getGroups, deleteGroup, deleteAccount, createGroup };
 }
 export default useUser;

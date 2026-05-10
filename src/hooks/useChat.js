@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from "react-redux"
 import { fetchPrivateRoomApi } from "../api/chat/privateChatApi";
-import { fetchGroupApi } from "../api/chat/groupApi";
+import { fetchGroupApi, summarizeGroupApi } from "../api/chat/groupApi";
 import { setUserError, setUserLoading } from "../features/user/userSlice";
 import { setChatError, setChatLoading, setChatMessages, setChatRoomsId, setselectedChatroomId } from "../features/chat/chatSlice";
 import { setGroupAdmin } from "../features/chat/groupSlice";
 import { asArray, asObject } from "../utils/dataResolver";
 import { toast } from 'react-toastify'
+import { setRemainingChances, setSummary, setSummaryLoading, setSummayError } from "../features/summarySlice";
 const useChat = () => {
     const dispatch = useDispatch();
     const AllMessages = useSelector((state) => state.chat.chatMessages);
@@ -46,8 +47,9 @@ const useChat = () => {
     }
 
     const getChatGroup = async (groupId) => {
-        const isGroupChatFetched = allroomId[groupId];
-        if (isGroupChatFetched) {
+
+        if (allroomId[groupId]?.chatRoomId) {
+            dispatch(setGroupAdmin(allroomId[groupId].admin))
             return;
         }
 
@@ -56,7 +58,8 @@ const useChat = () => {
             const response = await fetchGroupApi(groupId);
             const { id, createdBy, messages = {} } = response.data
             if (id) {
-                dispatch(setChatRoomsId({ userId: groupId, chatRoomId: id }));
+                console.log("aya ")
+                dispatch(setChatRoomsId({ userId: groupId, chatRoomId: id, admin: createdBy }));
                 dispatch(setGroupAdmin(createdBy))
                 dispatch(setChatMessages({ roomId: id, messages: messages }));
             }
@@ -71,7 +74,27 @@ const useChat = () => {
             dispatch(setChatLoading(false))
         }
     }
-    return { getChatroom, getChatGroup }
+
+    const summarizeGroupChat = async (groupId) => {
+        try {
+            if (!groupId) throw "Group id is invalid";
+            dispatch(setSummaryLoading(true));
+            const response = await summarizeGroupApi(groupId);
+            console.log(response);
+            console.log(response.data);
+
+            
+            dispatch(setRemainingChances(response.data.remainingChances))
+            dispatch(setSummary(response.data));
+            return response;
+        } catch (error) {
+            console.error(error);
+            dispatch(setSummayError(error));
+        } finally {
+            dispatch(setSummaryLoading(false));
+        }
+    }
+    return { summarizeGroupChat, getChatroom, getChatGroup }
 
 }
 

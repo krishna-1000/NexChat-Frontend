@@ -13,7 +13,9 @@ const LoginPage = () => {
         try {
             const res = await loginApi(data);
             if (res.status == 200) {
+                console.log(res.data)
                 localStorage.setItem("token", res.data.token);
+                localStorage.setItem("refreshToken", res.data.refreshToken);
                 localStorage.setItem("loginUserId", res.data.id);
                 localStorage.setItem("userBio", res.data.bio);
                 localStorage.setItem("loginUserName", res.data.username);

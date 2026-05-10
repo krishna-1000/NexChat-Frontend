@@ -165,15 +165,7 @@ const LoginForm = ({ error2, onSubmit }) => {
             </div>
           </div>
 
-          <div className="flex justify-end -mt-2">
-            <button
-              type="button"
-              className="text-xs text-cyan-800 hover:text-cyan-500
-                         font-mono tracking-wider transition-colors duration-200"
-            >
-              forgot_password?
-            </button>
-          </div>
+          
 
           <button
             type="submit"

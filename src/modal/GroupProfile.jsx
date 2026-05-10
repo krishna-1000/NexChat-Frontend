@@ -51,19 +51,14 @@ const GroupProfile = () => {
                             console.log(groupId, selectedGroup)
                             if (group.groupId != selectedGroup) { return null }
                             return (group.members.map((member, index) => {
-
                                 if (member.user.username == group.createdBy) {
-                                    return <li className=' h-5 flex justify-start items-center hover:bg-gray-700 rounded-md text-white bg-green-400 w-fit' key={member.user.id}>
-                                        <span>Admin {member.user.username}</span>
+                                    return <li className='h-5 flex justify-start items-center hover:bg-gray-700 rounded-md text-white border-t-2 border-b-2 border-gray-400 w-fit' key={member.user.id}>
+                                        <span>Admin -) {member.user.username}</span>
                                     </li>
                                 }
-                                return <li className='border-b-4 border-gray-700 h-10 flex justify-between items-center hover:bg-gray-700 rounded-md' key={member.user.id}>
+                                return <li className='border-b-4 border-gray-700 h-5 mb-2 flex justify-between items-center hover:bg-gray-700 rounded-md' key={member.user.id}>
                                     <span className='font-light text-2xl'> {member.user.username}</span>
-
-
                                 </li>
-
-
                             }))
                         })
 
@@ -72,7 +67,7 @@ const GroupProfile = () => {
 
             </main>
 
-            <footer onClick={()=>dispatch(setIsModalOpen(false))} className='hover:cursor-pointer bg-purple-500  h-9 gap-0.5 flex justify-center items-center font-bold rounded-2xl'>
+            <footer onClick={() => dispatch(setIsModalOpen(false))} className='hover:cursor-pointer bg-purple-500  h-9 gap-0.5 flex justify-center items-center font-bold rounded-2xl'>
 
                 <div className='flex justify-center items-center gap-1'>
                     <MdMessage size={25} />

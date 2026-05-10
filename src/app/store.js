@@ -6,9 +6,10 @@ import CallReducer from '../features/call/callSlice'
 import groupReducer from '../features/chat/groupSlice'
 import profileReducer from '../features/user/profileSlice'
 import appReducer from '../features/appSlice'
+import summaryReducer from '../features/summarySlice'
 
 
 
 export const store = configureStore({
-    reducer: {app:appReducer,profile:profileReducer, user: userReducer, chat: chatReducer,modal:modalReducer ,call:CallReducer,group:groupReducer}
+    reducer: {summary:summaryReducer,app:appReducer,profile:profileReducer, user: userReducer, chat: chatReducer,modal:modalReducer ,call:CallReducer,group:groupReducer}
 });
